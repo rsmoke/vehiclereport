@@ -1,0 +1,26 @@
+#CosignProtected On
+#AuthType Cosign
+#CosignRequireFactor   UMICH.EDU
+#SSLRequireSSL
+#AuthLDAPURL ldap://ldap.umich.edu
+#Require ldap-group cn=PsychTransportationVehicle,ou=User Groups,ou=Groups,dc=umich,dc=edu
+
+
+
+#Web Space Restriction Description
+
+# MAINTENANCE-PAGE REDIRECT
+#<IfModule mod_rewrite.c>
+# RewriteEngine on
+# RewriteCond %{REMOTE_ADDR} !^141\.211\.27\.250
+# RewriteCond %{REQUEST_URI} !/closed-index.php$ [NC]
+# RewriteCond %{REQUEST_URI} !\.(jpe?g?|png|gif) [NC]
+# RewriteRule .* /WritingContest/closed-index.php [R=302,L]
+#</IfModule>
+
+CosignProtected On
+AuthType Cosign
+CosignRequireFactor   UMICH.EDU
+SSLRequireSSL
+AuthLDAPURL ldap://ldap.umich.edu
+Require valid-user
