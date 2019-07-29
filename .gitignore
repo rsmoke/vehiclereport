@@ -2,4 +2,6 @@
 cosign-test
 .well-known
 /admin/uploads/
-/js/editformBackup20180516.js
+js/editformBackup20180516.js
+admin/htaccess.admin.txt
+
