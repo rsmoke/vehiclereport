@@ -76,7 +76,7 @@ if ($isAdmin) {
     // output the column headings
     fputcsv($output, array('id', 'uniquename', 'First Name', 'Last Name', 'Program', 'Phone', 'Vehicle', 'Date', 'Mileage (Depart)', 'Mileage (Return)', 'Fuel (Depart)', 'Fuel (Return)', 'Parking', 'Notes', 'Admin Notes'));
 
-                $sqlSelect2 = <<<SQL
+         $sqlSelect2 = <<<SQL
 			SELECT * FROM transportation_vf
 SQL;
 
