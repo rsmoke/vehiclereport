@@ -77,7 +77,7 @@ if ($isAdmin) {
     fputcsv($output, array('id', 'uniquename', 'First Name', 'Last Name', 'Program', 'Phone', 'Vehicle', 'Date', 'Mileage (Depart)', 'Mileage (Return)', 'Fuel (Depart)', 'Fuel (Return)', 'Parking', 'Notes', 'Admin Notes'));
 
                 $sqlSelect2 = <<<SQL
-								SELECT * FROM transportation_vf
+			SELECT * FROM transportation_vf
 SQL;
 
     if (!$result = $db->query($sqlSelect2)) {
