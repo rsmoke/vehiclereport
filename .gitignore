@@ -4,4 +4,5 @@ cosign-test
 /admin/uploads/
 js/editformBackup20180516.js
 admin/htaccess.admin.txt
+error_log*
 
