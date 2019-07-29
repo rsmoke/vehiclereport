@@ -1,6 +1,6 @@
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/ceal_config.php');
-require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basic_lib.php');
+require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,19 +26,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basic_lib.php');
 
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-	//include "querypushupdatesindb.php";
-	
-	//require_once($_SERVER["DOCUMENT_ROOT"]."/../support/connect_tran_vf.php");
-	
-	//global $db;
-	//$db = new mysqli('localhost', $connectionUserText, $connectionsUserPassword, $db);
-
-	/*if($db->connect_errno > 0) 
-	{
-		die('Unable to connect to database [' . $db->connect_error . ']');
-	}//if
-	
-	*/
 	
 	$mileageReturn = $_POST['mileageReturn'];
 	$fuelReturn = $_POST['fuelReturn'];

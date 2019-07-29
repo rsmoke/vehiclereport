@@ -1,6 +1,6 @@
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/ceal_config.php');
-require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basic_lib.php');
+require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +22,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basic_lib.php');
     </style>
 
 
-  <?php 
+	<?php 
+	$today = "";
   if ($today == "") {
     	$today = date("m")."/".date("d")."/".date("Y");
   }//today

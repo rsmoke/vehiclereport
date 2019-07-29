@@ -1,6 +1,6 @@
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/ceal_config.php');
-require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basic_lib.php');
+require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +20,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basic_lib.php');
 // 		global $db;
 // 		$db = new mysqli('localhost', $connectionUserText, $connectionsUserPassword, $db);
 		
-		$sql = "SELECT * FROM transportation_vf WHERE uniquename = \"$uniquename\" ORDER BY dateEvent DESC, IDvf DESC";	
+		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
 		
 		if(!$result = $db->query($sql))
 		{

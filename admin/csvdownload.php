@@ -1,6 +1,6 @@
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/ceal_config.php');
-require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basic_lib.php');
+require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 
 // $file = 'export_blueeecard';
 
@@ -77,14 +77,13 @@ if ($isAdmin) {
     fputcsv($output, array('id', 'uniquename', 'First Name', 'Last Name', 'Program', 'Phone', 'Vehicle', 'Date', 'Mileage (Depart)', 'Mileage (Return)', 'Fuel (Depart)', 'Fuel (Return)', 'Parking', 'Notes', 'Admin Notes'));
 
          $sqlSelect2 = <<<SQL
-			SELECT * FROM transportation_vf
+			SELECT IDvf, uniquename, firstname, lastname, program, phone, vehiclenum, dateEvent, mileageDepart, mileageReturn, fuelDepart, fuelReturn, parking, notes, adminnotes FROM transportation_vf
 SQL;
 
     if (!$result = $db->query($sqlSelect2)) {
         db_fatal_error("data select issue", $db->error);
         exit;
     }
-
     // loop over the rows, outputting them
     while ($row = $result->fetch_assoc()) {
         fputcsv($output, $row);

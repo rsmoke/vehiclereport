@@ -1,6 +1,6 @@
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/ceal_config.php');
-require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basic_lib.php');
+require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 ?>
 
 <!DOCTYPE html>
@@ -116,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 		//$sql = "SELECT vehiclenum, COUNT(vehiclenum) AS total FROM tran_vf WHERE (dateEvent >= '$termStartDate' AND dateEvent <= '$termEndDate') ORDER BY vehiclenum DESC";
 		$sql = "SELECT vehiclenum, COUNT(vehiclenum) as totalCars FROM transportation_vf WHERE (dateEvent >= '$termStartDate' AND dateEvent <= '$termEndDate') GROUP BY vehiclenum ORDER BY vehiclenum DESC";
-		
+
 		if(!$result = $db->query($sql))
 		{
 			die('There was an error running the query [' . $db->error . ']');

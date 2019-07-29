@@ -1,14 +1,7 @@
 <?php
 	//include_once("connect.php");
-	require_once($_SERVER["DOCUMENT_ROOT"]."/../support/connect_tran_vf.php");
-	
-	global $db;
-	$db = new mysqli('localhost', $connectionUserText, $connectionsUserPassword , $db);
-
-	if($db->connect_errno > 0) 
-	{
-		die('Unable to connect to database [' . $db->connect_error . ']');
-	}//if
+	require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/ceal_config.php');
+	require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 	
 	$mileageReturn = $_POST['mileageReturn'];
 	$fuelReturn = $_POST['fuelReturn'];
@@ -31,7 +24,7 @@
 	$sql = uploadAndProcessImageFile("imagebackend", $sql);
 	$sql = uploadAndProcessImageFile("imagedamageend", $sql);
 	
-	$sql .= " WHERE IDvf = \"$id\"";
+	$sql .= " WHERE IDvf = '$id'";
 
  	
 	if ($db->query($sql) === true) {
@@ -47,7 +40,6 @@
 function uploadAndProcessImageFile($image, $sql) {
 	
 		$vehiclenum = $_POST['vehiclenum'];
-		$uniquename = $_SERVER['REMOTE_USER'];
 	
 		$file_name = $_FILES[$image]['name'];
 		$file_size = $_FILES[$image]['size'];
