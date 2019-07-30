@@ -8,13 +8,13 @@
 
 	if ( $vehicleNum == "" ) 
 	{
-		$foundLocation = "Enter vehicle number above to locate vehicle.";
+		$foundLocation = "&nbsp; - Enter vehicle number above to locate vehicle.";
 	
 	}//if
 	else {
 	
 		$sql = "SELECT parking FROM transportation_vf WHERE vehiclenum = '$vehicleNum' ORDER BY mod_on DESC LIMIT 1 ";
-		// echo $sql;
+
 		if(!$result = $db->query($sql))
 		{
 			die('There was an error running the query [' . $db->error . ']');
@@ -29,12 +29,12 @@
 		
 		foreach ($queryResult as $value)
 		{
-			$foundLocation =  $value['parking'];	 
+			$foundLocation =  "&nbsp; - " . $value['parking'];	 
 		}//foreach
 		
 		if ( $foundLocation == "")
 		{
-			$foundLocation = "No location found for this vehicle.";
+			$foundLocation = "&nbsp; - No location found for this vehicle.";
 		}//if
 	}//else
 
