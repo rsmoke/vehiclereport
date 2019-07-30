@@ -354,7 +354,8 @@ function uploadImageFile($image, $vehiclenum, $uniquename) {
     <?php include("_footer.php"); ?>
 
 <script>
-$(window).load(function() {
+// $(window).load(function() {
+$(document).ready(function() {
    var vehicleToFindOnLoad = document.getElementById('vehiclenum').value; 
    findVehicle(vehicleToFindOnLoad);
 });
@@ -362,7 +363,7 @@ $(window).load(function() {
 
 function findVehicle(vehicleNum) {
 
-	console.log(vehicleNum);
+//	console.log(vehicleNum);
 
 	$.ajax({
 	url: 'findVehicleLocation.php',
