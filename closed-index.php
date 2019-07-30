@@ -15,7 +15,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
   <meta name="description" content="CEAL Vehicle Report">
   <meta name="keywords" content="CEAL, Vehicle, Report, UniversityofMichigan">
   <meta name="author" content="jadarga">
-  <link rel="icon" href="img/favicon.ico">
+  <link rel="icon" href=<?php echo URL . "favicon.ico";?>>
   <style>
     html {
     background: url(images/maintainImage.png) no-repeat center center fixed;
