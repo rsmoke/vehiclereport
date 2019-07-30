@@ -11,24 +11,14 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
     <?php include("_navbar.php");?>
 
     <div class="container" role="main">
-        <h1 id="title"><?php echo "$siteTitle";?></h1>
-    <style>
-        #title {
-            font-size:2rem;
-            color: #00274c;
-            font-weight:400;
-            margin-bottom: 1rem;
-        }
-    </style>
-
-
+    	<h1 id="title"><?php echo "$siteTitle";?></h1>
 	<?php 
 	$today = "";
   if ($today == "") {
     	$today = date("m")."/".date("d")."/".date("Y");
   }//today
 
-  $errors = ""; //Clean out errors
+	$errors = ""; //Clean out errors
 
 	//*****************************
 	// Check for required fields
@@ -51,7 +41,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 		$fuelDepart = $_POST['fuelDepart'];
 		$notes = $_POST['notes'];
 			
-		$lastKnownLocation = $_POST['lastKnownLocation2'];
+		// $lastKnownLocation = $_POST['lastKnownLocation'];
 		
 		
 		if (empty($_POST["uniquename"])) {
@@ -84,36 +74,34 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 			echo $errors;
 		 }//if
 		 
-		$errorsFilesString = "";
-		$errorsFiles = "";
+		 $errorsFilesString = "";
+		 $errorsFiles = "";
 		 
 		$errorsFiles = processImageFile("imagefrontstart", $errorsFiles);
 		$errorsFiles = processImageFile("imagedriverstart", $errorsFiles);
 		$errorsFiles = processImageFile("imagepassengerstart", $errorsFiles);
 		$errorsFiles = processImageFile("imagebackstart", $errorsFiles);
 	
-}//if POST
-
-if ($errorsFiles != "") {
-	$errorsFilesString = "<div class=\"alert alert-danger\" role=\"alert\"><h4>The following errors occurred with file upload:</h4>". $errorsFiles . "</div>";
-	echo $errorsFilesString;
-}//if
-else {
-	//Upload files if no errors
-	if( $errors == "" ) {	
-		$imagefrontstartfilename = uploadImageFile("imagefrontstart", $vehiclenum, $uniquename);
-		$imagedriverstartfilename = uploadImageFile("imagedriverstart", $vehiclenum, $uniquename);
-		$imagepassengerstartfilename = uploadImageFile("imagepassengerstart", $vehiclenum, $uniquename);
-		$imagebackstartfilename = uploadImageFile("imagebackstart", $vehiclenum, $uniquename);
-		if ( $_FILES['imagedamagestart']['name'] != "" ) {
-			$imagedamagestartfilename = uploadImageFile("imagedamagestart", $vehiclenum, $uniquename);
-			$thereIsADamageImage = false;
-		}//if
-		else {
-			$thereIsADamageImage = true;
-		}
-	}//if
-}//else
+	// }//if POST
+		if ($errorsFiles != "") {
+			$errorsFilesString = "<div class=\"alert alert-danger\" role=\"alert\"><h4>The following errors occurred with file upload:</h4>". $errorsFiles . "</div>";
+			echo $errorsFilesString;
+		} else {
+			//Upload files if no errors
+			if( ($errors == "") && (isset($vehiclenum))) {	
+				$imagefrontstartfilename = uploadImageFile("imagefrontstart", $vehiclenum, $uniquename);
+				$imagedriverstartfilename = uploadImageFile("imagedriverstart", $vehiclenum, $uniquename);
+				$imagepassengerstartfilename = uploadImageFile("imagepassengerstart", $vehiclenum, $uniquename);
+				$imagebackstartfilename = uploadImageFile("imagebackstart", $vehiclenum, $uniquename);
+				if ( $_FILES['imagedamagestart']['name'] != "" ) {
+					$imagedamagestartfilename = uploadImageFile("imagedamagestart", $vehiclenum, $uniquename);
+					$thereIsADamageImage = false;
+				} else {
+					$thereIsADamageImage = true;
+				}
+			}//if
+		}//else
+	}
 
     
   if ($_SERVER['REQUEST_METHOD'] == 'POST' && $errors == "" && $errorsFilesString == "")  {
@@ -121,29 +109,17 @@ else {
 			$dateEvent = strtotime($dateEvent);
 			$dateEventStamp = date("Y-m-d H:i:s", $dateEvent);
 			
-// 			$mysqli = new mysqli('localhost', $connectionUserText, $connectionsUserPassword, $db);
-
-// 			if($mysqli ->connect_errno > 0) 
-// 			{ 
-// 				die('Connect Error (' . $mysqli->connect_errno . ') '. $mysqli->connect_error);
-// 			}//if
-			
 			if ( $thereIsADamageImage == false ) {
 				$sql = "INSERT INTO transportation_vf (uniquename, firstname, lastname, firstandlastname, driveruniquename, driverfirstandlastname, program, dateEvent, mileageDepart, fuelDepart, notes, phone, vehiclenum, imagefrontstartfilename, imagedriverstartfilename, imagepassengerstartfilename, imagebackstartfilename, imagedamagestartfilename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";	
-			}//if
-			else {
+			} else {
 				$sql = "INSERT INTO transportation_vf (uniquename, firstname, lastname, firstandlastname, driveruniquename, driverfirstandlastname, program, dateEvent, mileageDepart, fuelDepart, notes, phone, vehiclenum, imagefrontstartfilename, imagedriverstartfilename, imagepassengerstartfilename, imagebackstartfilename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";	
 			}//else
-				
-// 			date_default_timezone_set("America/New_York");
-			//$mysqltime = date ("Y-m-d H:i:s");
 
 			$stmt = $db->stmt_init();
 			$stmt->prepare($sql);
 			if ( $thereIsADamageImage == false ) {
 				$stmt->bind_param('ssssssssssssssssss', $uniquename, $firstname, $lastname, $firstandlastname, $driveruniquename, $driverfirstandlastname, $program, $dateEventStamp, $mileageDepart, $fuelDepart, $notes, $phone, $vehiclenum, $imagefrontstartfilename, $imagedriverstartfilename, $imagepassengerstartfilename, $imagebackstartfilename, $imagedamagestartfilename);
-			}//if
-			else {
+			} else {
 				$stmt->bind_param('sssssssssssssssss', $uniquename, $firstname, $lastname, $firstandlastname, $driveruniquename, $driverfirstandlastname, $program, $dateEventStamp, $mileageDepart, $fuelDepart, $notes, $phone, $vehiclenum, $imagefrontstartfilename, $imagedriverstartfilename, $imagepassengerstartfilename, $imagebackstartfilename);
 			}//else
 						
@@ -159,140 +135,156 @@ else {
 			
 			You may close this window.</div>";
 						
-		}//if
- else  {
+		} else  {
 			$name = ldapGleaner($uniquename);
   ?>
 	<form method="post" id="formdirectory" name="formdirectory"  enctype="multipart/form-data">
 
 		<fieldset>
 
-		<div class="form-group row">
-			<label class="col-sm-2">Date</label>
-			<div class="col-sm-4">
-				<input type="text" id="datetimepickerToday" name="datetimepickerToday" value="<?php echo $today ?>">
-		   </div>
-		</div>
-			
-		  <div class="form-group row">
-			<label for="uniquename" class="col-sm-2 form-control-label">Your uniqname</label>
-			<div class="col-sm-4">
-			  <input type="text" class="form-control" id="uniquename" name="uniquename" value="<?php echo $uniquename ?>">
+			<div class="form-group row">
+				<label for= "datetimepickerToday">Date</label>
+				<input type="text" class="form-control" id="datetimepickerToday" name="datetimepickerToday" value="<?php echo $today ?>">
 			</div>
-		  </div>
-		  
-		<input type="hidden" class="form-control" id="firstname" name="firstname" placeholder="First Name"  value="<?php echo $name[0] ?>">
-		<input type="hidden" class="form-control" id="lastname" name="lastname" placeholder="Last Name" value="<?php echo $name[1] ?>">
+				
+			<div class="form-group row">
+				<label for="uniquename">Your uniqname</label>
+				<input type="text" class="form-control" id="uniquename" name="uniquename" value="<?php echo (isset($uniquename))? $uniquename : "";?>">
+			</div>
+				
+			<input type="hidden" class="form-control" id="firstname" name="firstname" placeholder="First Name"  value="<?php echo $name[0] ?>">
+			<input type="hidden" class="form-control" id="lastname" name="lastname" placeholder="Last Name" value="<?php echo $name[1] ?>">
 
-		<div class="form-group row">
-			<label for="firstandlastname" class="col-sm-2 form-control-label">Your first and last name</label>
-			<div class="col-sm-4">
-			  <input type="text" class="form-control" id="firstandlastname" name="firstandlastname" placeholder="Your First and Last Name" value="<?php echo $name[0]." ".$name[1] ?>">
+			<div class="form-group row">
+				<label for="firstandlastname">Your first and last name</label>
+				<input type="text" class="form-control" id="firstandlastname" name="firstandlastname" placeholder="Your First and Last Name" value="<?php echo $name[0]." ".$name[1] ?>">
 			</div>
-		</div>
-		
-		<div class="form-group row">
-			<label for="checkboxareyoudriver" class="col-sm-2 form-control-label"></label>
-			<div class="col-sm-4">
+			
+			<div class="form-group form-check row">
 				<input class="form-check-input" type="checkbox" id="checkboxareyoudriver" name="checkboxareyoudriver" <?php if(isset($_POST['checkboxareyoudriver'])) echo "checked='checked'"; ?>>
 				<label class="form-check-label" for="checkboxareyoudriver">Check if you are the driver</label>
 			</div>
-		</div>
-		
-		 <div class="form-group row">
-			<label for="driveruniquename" class="col-sm-2 form-control-label">Driver's uniqname</label>
-			<div class="col-sm-4">
-			  <input type="text" class="form-control" id="driveruniquename" name="driveruniquename" value="<?php echo $driveruniquename ?>">
+			
+			<div class="form-group row">
+				<label for="driveruniquename">Driver's uniqname</label>
+				<input type="text" class="form-control" id="driveruniquename" name="driveruniquename" value="<?php echo (isset($driveruniquename))? $driveruniquename : "";?>">
 			</div>
-		  </div>
-		  
-		<div class="form-group row">
-			<label for="driverfirstandlastname" class="col-sm-2 form-control-label">Driver's first and last name</label>
-			<div class="col-sm-4">
-			  <input type="text" class="form-control" id="driverfirstandlastname" name="driverfirstandlastname" value="<?php echo $driverfirstandlastname ?>">
+				
+			<div class="form-group row">
+				<label for="driverfirstandlastname">Driver's first and last name</label>
+				<input type="text" class="form-control" id="driverfirstandlastname" name="driverfirstandlastname" value="<?php echo (isset($driverfirstandlastname))? $driverfirstandlastname : "";?>">
 			</div>
-		</div>
-		
-		
-		<div class="form-group row">
-			<label for="lastname" class="col-sm-2 form-control-label">Phone</label>
-			<div class="col-sm-4">
-			  <input type="text" class="form-control" id="phone" name="phone" placeholder="(734) 555-5555" value="<?php echo $phone ?>">
+
+			<div class="form-group row">
+				<label for="lastname" >Phone</label>
+				<input type="text" class="form-control" id="phone" name="phone" placeholder="(734) 555-5555" value="<?php (isset($phone))? $phone : "";?>">
 			</div>
-		</div>
-		
-		<div class="form-group row">
-			<label for="vehiclenumber" class="col-sm-2 form-control-label">Vehicle Number</label>
-			<div class="col-sm-4">
-			  <input type="text" class="form-control" id="vehiclenum" name="vehiclenum" placeholder="Type in vehicle number to locate vehicle" value="<?php echo $vehiclenum ?>" onkeyup="findVehicle(this.value)">
+			
+			<div class="form-group row">
+				<label for="vehiclenumber">Vehicle Number</label>
+				<input type="text" class="form-control" id="vehiclenum" name="vehiclenum" placeholder="Type in vehicle number to locate vehicle" value="<?php echo (isset($vehiclenum))? $vehiclenum : ""; ?>" onkeyup="findVehicle(this.value)">
 			</div>
-		</div>
-		
-		<div class="form-group row">
-			<label for="Location" class="col-sm-2 form-control-label">Location</label>
-			<div class="col-sm-4">
+			
+			<div class="form-group row">
+				<label for="Location">Location</label>
 				<div id="lastKnownLocation"></div>
 			</div>
-		</div>
-		
-		
-		  <div class="form-group row">
-			<label class="col-sm-2">Course Number / Program</label>
-			<div class="col-sm-4">
-			   <textarea class="form-control" rows="4" id="program" name="program" placeholder="Course Number / Program"></textarea>
-			  </div>
-		  </div>
+			
+			<div class="form-group row">
+				<label>Course Number / Program</label>
+				<textarea class="form-control" rows="4" id="program" name="program" placeholder="Course Number / Program"></textarea>
+			</div>
 
-		<div class="form-group row">
-			<label for="mileageDepart" class="col-sm-2 form-control-label">Mileage (Depart)</label>
-			<div class="col-sm-4">
-			  <input type="text" class="form-control" id="mileageDepart" name="mileageDepart"  min="0" placeholder="Mileage (Depart)" value="<?php echo $mileageDepart ?>">
+			<div class="form-group row">
+				<label for="mileageDepart">Mileage (Depart)</label>
+				<input type="text" class="form-control" id="mileageDepart" name="mileageDepart"  min="0" placeholder="Mileage (Depart)" value="<?php echo (isset($mileageDepart))? $mileageDepart : ""; ?>">
 			</div>
-		  </div>
-		  
-		  <!--fuel depart-->
-		  <div class="form-group row">
-		  <label for="fuel-gauge-controlDepart" class="col-sm-2 form-control-label" >Fuel (Depart)</label>
-			  <div class="col-md-5">
-				   <div class="col-md-offset-3"><div id="fuel-gaugeDepart" name="fuelGaugeDepart"></div></div>
-				  <br><br>
-				  <div id="fuel-gauge-controlDepart"></div>
-			  </div>
-			  <input type="hidden" name="fuelDepart" id="fuelDepart" value="">
-		</div>
-		
-		<br><br>
-		
-		<div class="form-group row">
-			<label for="imagescar" class="col-sm-2 form-control-label">Upload car images</label>
-			<div class="col-sm-10">
-				<label for="imagefrontstart" class="col-sm-2 form-control-label">Front</label><input type="file" id="imagefrontstart" name="imagefrontstart" class="btn btn-info" >
-				<label for="imagedriverstart" class="col-sm-2 form-control-label">Driver's Side</label><input type="file" id="imagedriverstart" name="imagedriverstart" class="btn btn-info">
-				<label for="imagepassengerstart" class="col-sm-2 form-control-label">Passenger's Side</label><input type="file" id="imagepassengerstart" name="imagepassengerstart" class="btn btn-info">
-				<label for="imagebackstart" class="col-sm-2 form-control-label">Back</label><input type="file" id="imagebackstart" name="imagebackstart" class="btn btn-info">
-				<label for="imagebackstart" class="col-sm-2 form-control-label">Damage</label><input type="file" id="imagedamagestart" name="imagedamagestart" class="btn btn-info">
+				
+			<!--fuel depart-->
+			<div class="form-group row">
+				<label for="fuel-gauge-controlDepart">Fuel (Depart)</label>
+					<div class="ml-3 col-5">
+						<div id="fuel-gaugeDepart" name="fuelGaugeDepart"></div>
+						<br>
+						<div id="fuel-gauge-controlDepart"></div>
+					</div>
+				<input type="hidden" name="fuelDepart" id="fuelDepart" value="">
 			</div>
-		  </div>
+			
+			<br><br>
+			<h5 class="bg-light">Upload car images</h5>
+			<div class="form-group row justify-content-center">
+				<div class="col-10">
+					<div class="input-group mt-3">
+						<div class="custom-file">
+							<input type="file" id="imagefrontstart" name="imagefrontstart" class="custom-file-input">
+							<label for="imagefrontstart" class="custom-file-label">Front</label>
+						</div>
+					</div>
+				</div>
+			</div>	
+			<div class="form-group row justify-content-center">
+				<div class="col-10">
+					<div class="input-group mt-3">
+						<div class="custom-file">
+							<input type="file" id="imagedriverstart" name="imagedriverstart" class="custom-file-input">
+							<label for="imagedriverstart" class="custom-file-label">Driver's Side</label>
+							</div>
+					</div>
+				</div>
+			</div>	
+			<div class="form-group row justify-content-center">
+				<div class="col-10">
+					<div class="input-group mt-3">
+						<div class="custom-file">
+							<input type="file" id="imagepassengerstart" name="imagepassengerstart" class="custom-file-input">
+							<label for="imagepassengerstart" class="custom-file-label">Passenger's Side</label>
+							</div>
+					</div>
+				</div>
+			</div>	
+			<div class="form-group row justify-content-center">
+				<div class="col-10">
+					<div class="input-group mt-3">
+						<div class="custom-file">
+							<input type="file" id="imagebackstart" name="imagebackstart" class="custom-file-input">
+							<label for="imagebackstart" class="custom-file-label">Back</label>
+							</div>
+					</div>
+				</div>
+			</div>	
+			<div class="form-group row justify-content-center">
+				<div class="col-10">
+					<div class="input-group mt-3">
+						<div class="custom-file">
+							<input type="file" id="imagedamagestart" name="imagedamagestart" class="custom-file-input">
+							<label for="imagedamagestart" class="custom-file-label">Damage</label>
+							</div>
+					</div>
+				</div>
+			</div>
+			<hr>
 
-		 <div class="form-group row">
-			<label for="notes" class="col-sm-2 form-control-label">Notes (optional)</label>
-			<div class="col-sm-5">
-			  <textarea class="form-control" rows="4" id="notes" name="notes" placeholder="Notes"></textarea>
+
+			<div class="form-group row">
+				<label for="notes" >Notes (optional)</label>
+				<textarea class="form-control" rows="4" id="notes" name="notes" placeholder="Notes"></textarea>
 			</div>
-		  </div>
-		  	  
-		 <div class="col-md-7">
-			<div class="alert alert-danger text-center" role="alert" ><h4>If you see any new damage to the vehicle, please notify us at <a href="mailto:<?php echo "$addressEmail";?>"><?php echo "$addressEmail";?></a>.</h4></div>
-	  </div>
-		
-		 <div class="col-md-12 col-md-offset-3">
-			<input type="submit" value="Submit" id="submitbutton" class="btn btn-primary">
-		</div>
+
+			<div class="form-group row justify-content-center">  	  
+				<div class="col-md-7">
+					<div class="alert alert-danger text-center" role="alert" >
+						<h4>If you see any new damage to the vehicle, please notify us at <a href="mailto:<?php echo "$addressEmail";?>"><?php echo "$addressEmail";?></a>.</h4>
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group row justify-content-center">
+				<input type="submit" value="Submit" id="submitbutton" class="btn btn-primary">
+			</div>
 				
 		</fieldset>
- </form>
- <br>
-	
+ 	</form>
 				
 			<br><br>
 			
@@ -303,16 +295,15 @@ else {
 
 
 function processImageFile($image, $errorsFiles) {
-
 	$vehiclenum = $_POST['vehiclenum'];
 	$uniquename = $_POST['uniquename'];
 
 	$file_name = $_FILES[$image]['name'];
-    $file_size = $_FILES[$image]['size'];
-    $file_tmp = $_FILES[$image]['tmp_name'];
-    $file_type = $_FILES[$image]['type'];
+	$file_size = $_FILES[$image]['size'];
+	$file_tmp = $_FILES[$image]['tmp_name'];
+	$file_type = $_FILES[$image]['type'];
 	
-	if ($_FILES[$image]["name"] == "") { 
+	if (($file_name == "") || ($file_size < 1)) { 
 
 			switch($image) {
 				case "imagefrontstart":
@@ -334,14 +325,13 @@ function processImageFile($image, $errorsFiles) {
 	if ( $file_size > 20971520 ) {
         $errorsFiles .= "File size must be under 20 MB.<br>";
     }//if
-	
 return $errorsFiles;
 }//function processImageFile
 
 
 function uploadImageFile($image, $vehiclenum, $uniquename) {
 
-		$todayDate = date(Ymd);
+		$todayDate = date('Ymd');
 		$temp = explode(".", $_FILES[$image]["name"]);
 		$newfilename = $todayDate . $vehiclenum . $uniquename . $image . round(microtime(true)) . '.' . end($temp);
 		move_uploaded_file($_FILES[$image]["tmp_name"], "admin/uploads/" . $newfilename);
