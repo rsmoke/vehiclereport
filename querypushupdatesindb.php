@@ -46,7 +46,7 @@ function uploadAndProcessImageFile($image, $sql) {
 		$file_tmp = $_FILES[$image]['tmp_name'];
 		$file_type = $_FILES[$image]['type'];
 		
-		$todayDate = date(Ymd);
+		$todayDate = date('Ymd');
 		$temp = explode(".", $_FILES[$image]["name"]);
 		$newfilename = $todayDate . $vehiclenum . $uniquename . $image . round(microtime(true)) . '.' . end($temp);
 		move_uploaded_file($_FILES[$image]["tmp_name"], "admin/uploads/" . $newfilename);
