@@ -20,7 +20,7 @@
     </nav>
     
       <div class="page-header">
-		<img class="img-fluid" src="../images/CEAL_logo.jpg" alt="LSA CEAL Logo" style="width:70%; margin:1rem; min-width: 300px; max-width:700px;" >
+		<img class="img-fluid" src=<?php echo URL . "/images/CEAL_logo.jpg";?> alt="LSA CEAL Logo" style="width:70%; margin:1rem; min-width: 300px; max-width:700px;" >
 	  </div>
 	  <style>
 	      .bg-dark {
