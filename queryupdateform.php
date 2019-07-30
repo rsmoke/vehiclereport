@@ -10,16 +10,16 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
   
     <?php include("_navbar.php"); ?>
 	  
-    <div class="container theme-showcase" role="main">
+    <div class="container" role="main">
 
-        <h1>Updating</h1>
+        <h1>Updating Vehicle</h1>
 
 
 <?php
 	$id = trim($_GET['id']);
 
   if ($id != "") {
-    $sql = "SELECT * from transportation_vf WHERE IDvf = \"$id\"";
+    $sql = "SELECT * from transportation_vf WHERE IDvf = '$id'";
 ?>
 
 
@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$sql = uploadAndProcessImageFile("imagebackend", $sql);
 	$sql = uploadAndProcessImageFile("imagedamageend", $sql);
 	
-	$sql .= " WHERE IDvf = \"$id\"";
+	$sql .= " WHERE IDvf = '$id'";
 	
 	//Uncomment for troubleshooting
 	if ($db->query($sql) === true) {
@@ -83,7 +83,7 @@ else {
 	{
 		$queryResult[] = $row;
 	}//while
-	
+
 	foreach ($queryResult as $value)
 	{
 	?>
@@ -105,182 +105,215 @@ else {
 		</div>
 		
 		 <div class="form-group row">
-			<label for="mileageDepart" class="col-sm-2 form-control-label">Mileage (Return)</label>
-			<div class="col-sm-4">
-			  <input type="text" class="form-control" id="mileageReturn" name="mileageReturn"  min="0" placeholder="Mileage (Return)" value="<?php echo $value["mileageReturn"]; ?>">
-			</div>
+			<label for="mileageDepart">Mileage (Return)</label>
+			<input type="text" class="form-control" id="mileageReturn" name="mileageReturn"  min="0" placeholder="Mileage (Return)" value="<?php echo $value["mileageReturn"]; ?>">
+
 		 </div>
 		  
 		 <div class="form-group row">
-		  <label for="fuel-gauge-controlReturn" class="col-sm-2 form-control-label" >Fuel (Return)</label>
-			  <div class="col-md-5">
-				   <div class="col-md-offset-3"><div id="fuel-gaugeReturn" name="fuelGaugeReturn"></div></div>
-					<br><br>
+		  <label for="fuel-gauge-controlReturn">Fuel (Return)</label>
+			  <div class="ml-3 col-5">
+				  <div id="fuel-gaugeReturn" name="fuelGaugeReturn"></div>
+					<br>
 					<div id="fuel-gauge-controlReturn"></div>
 			  </div>
-			  <input type="hidden" name="fuelReturn" id="fuelReturn" value="<?php echo $value["fuelReturn"]; ?>">
+			<input type="hidden" name="fuelReturn" id="fuelReturn" value="<?php echo $value["fuelReturn"]; ?>">
 		</div>
 				
 		<div id="fuelIsTooLow" class="alert alert-danger" role="alert"><h4>You need to go to Transportation Services (1213 Kipke Dr, Ann Arbor, MI 48109) to refuel this vehicle immediately.</h4></div>
 				
 				
 		 <div class="form-group row">
-			<label for="mileageDepart" class="col-sm-2 form-control-label">Parking Location</label>
-			<div class="col-sm-4">
-			  <textarea class="form-control" rows="3" id="parking" name="parking" placeholder="Parking Location"><?php echo $value["parking"]; ?></textarea>
-			</div>
+			<label for="mileageDepart">Parking Location</label>
+			<textarea class="form-control" rows="3" id="parking" name="parking" placeholder="Parking Location"><?php echo $value["parking"]; ?></textarea>
 		 </div>
 		 
-		 <div class="form-group row">
-			<label for="mileageDepart" class="col-sm-4 form-control-label"><strong>Please upload car images below.</strong></label>
+		<br><br>
+		<h5 class="bg-light">Please upload car images below.</h5>
+		<div class="form-group row justify-content-center">
+			<div class="col-10">
+				<div class="input-group mt-3">
+					<?php
+						if ( $value["imagefrontsitefilename"] == "" ) {
+							echo '<div class="custom-file">';
+							echo '<input type="file" id="imagefrontsite" name="imagefrontsite" class="custom-file-input" >';
+							echo '<label for="imagefrontsite" class="custom-file-label">Front (site)</label>';
+							echo '</div>';
+						} else {
+							echo 'Front (site)  [<span class="text-success">Image uploaded</span>]';
+						}
+					?>
+				</div>
+			</div>
 		</div>
-	
-	
-		<div class="col-sm-10">
-				<div class="form-group row">
-				<label for="imagefrontsite" class="col-sm-2 form-control-label">Front (site)</label>	
-					<?php 
-					if ( $value["imagefrontsitefilename"] == "" ) { ?>
-						<input type="file" id="imagefrontsite" name="imagefrontsite" class="btn btn-info" >
-					<?php }//if
-					else { ?>
-						<span class="label label-success">Image uploaded</span>
-					<?php 
-					}// else ?>
-				
+		<div class="form-group row justify-content-center">
+			<div class="col-10">
+				<div class="input-group mt-3">
+				<?php
+						if ( $value["imagedriversitefilename"] == "" ) {
+							echo '<div class="custom-file">';
+							echo '<input type="file" id="imagedriversite" name="imagedriversite" class="custom-file-input" >';
+							echo '<label for="imagedriversite" class="custom-file-label">Driver (site)</label>';
+							echo '</div>';
+						} else {
+							echo 'Driver (site)  [<span class="text-success">Image uploaded</span>]';
+						}
+					?>
 				</div>
-				
-				<div class="form-group row">
-				<label for="imagedriversite" class="col-sm-2 form-control-label">Driver's (site)</label>	
-					<?php 
-					if ( $value["imagedriversitefilename"] == "" ) { ?>
-						<input type="file" id="imagedriversite" name="imagedriversite" class="btn btn-info" >
-					<?php }//if
-					else { ?>
-						<span class="label label-success">Image uploaded</span>
-					<?php 
-					}// else ?>
+			</div>
+		</div>	
+		<div class="form-group row justify-content-center">
+			<div class="col-10">
+				<div class="input-group mt-3">
+					<?php
+						if ( $value["imagepassengersitefilename"] == "" ) {
+							echo '<div class="custom-file">';
+							echo '<input type="file" id="imagepassengersite" name="imagepassengersite" class="custom-file-input" >';
+							echo '<label for="imagepassengersite" class="custom-file-label">Passenger (site)</label>';
+							echo '</div>';
+						} else {
+							echo 'Passenger (site)  [<span class="text-success">Image uploaded</span>]';
+						}
+					?>
 				</div>
-				
-				<div class="form-group row">
-				<label for="imagepassengersite" class="col-sm-2 form-control-label">Passenger's (site)</label>	
-					<?php 
-					if ( $value["imagepassengersitefilename"] == "" ) { ?>
-						<input type="file" id="imagepassengersite" name="imagepassengersite" class="btn btn-info" >
-					<?php }//if
-					else { ?>
-						<span class="label label-success">Image uploaded</span>
-					<?php 
-					}// else ?>
+			</div>
+		</div>
+		<div class="form-group row justify-content-center">
+			<div class="col-10">
+				<div class="input-group mt-3">
+					<?php
+						if ( $value["imagebacksitefilename"] == "" ) {
+							echo '<div class="custom-file">';
+							echo '<input type="file" id="imagebacksite" name="imagebacksite" class="custom-file-input" >';
+							echo '<label for="imagebacksite" class="custom-file-label">Back (site)</label>';
+							echo '</div>';
+						} else {
+							echo 'Back (site)  [<span class="text-success">Image uploaded</span>]';
+						}
+					?>
 				</div>
-				
-				<div class="form-group row">
-				<label for="imagebacksite" class="col-sm-2 form-control-label">Back (site)</label>	
-					<?php 
-					if ( $value["imagebacksitefilename"] == "" ) { ?>
-						<input type="file" id="imagebacksite" name="imagebacksite" class="btn btn-info" >
-					<?php }//if
-					else { ?>
-						<span class="label label-success">Image uploaded</span>
-					<?php 
-					}// else ?>
+			</div>
+		</div>
+		<div class="form-group row justify-content-center">
+			<div class="col-10">
+				<div class="input-group mt-3">
+					<?php
+						if ( $value["imagedamagesitefilename"] == "" ) {
+							echo '<div class="custom-file">';
+							echo '<input type="file" id="imagedamagesite" name="imagedamagesite" class="custom-file-input" >';
+							echo '<label for="imagedamagesite" class="custom-file-label">Damage (site)</label>';
+							echo '</div>';
+						} else {
+							echo 'Damage (site)  [<span class="text-success">Image uploaded</span>]';
+						}
+					?>
 				</div>
-				
-				<div class="form-group row">
-				<label for="imagebackdamage" class="col-sm-2 form-control-label">Damage (site)</label>	
-					<?php 
-					if ( $value["imagedamagesitefilename"] == "" ) { ?>
-						<input type="file" id="imagedamagesite" name="imagedamagesite" class="btn btn-info" >
-					<?php }//if
-					else { ?>
-						<span class="label label-success">Image uploaded</span>
-					<?php 
-					}// else ?>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="form-group row justify-content-center">
+			<div class="col-10">
+				<div class="input-group mt-3">
+					<?php
+						if ( $value["imagefrontendfilename"] == "" ) {
+							echo '<div class="custom-file">';
+							echo '<input type="file" id="imagefrontend" name="imagefrontend" class="custom-file-input" >';
+							echo '<label for="imagefrontend" class="custom-file-label">Front (returned)</label>';
+							echo '</div>';
+						} else {
+							echo 'Front (returned)  [<span class="text-success">Image uploaded</span>]';
+						}
+					?>
 				</div>
-				
-				<div class="form-group row">
-				<label for="imagefrontend" class="col-sm-2 form-control-label">Front (returned)</label>	
-				<?php 
-					if ( $value["imagefrontendfilename"] == "" ) { ?>
-						<input type="file" id="imagefrontend" name="imagefrontend" class="btn btn-info" >
-					<?php }//if
-					else { ?>
-						<span class="label label-success">Image uploaded</span>
-					<?php 
-					}// else ?>
+			</div>
+		</div>
+		<div class="form-group row justify-content-center">
+			<div class="col-10">
+				<div class="input-group mt-3">
+					<?php
+						if ( $value["imagedriverendfilename"] == "" ) {
+							echo '<div class="custom-file">';
+							echo '<input type="file" id="imagedriverend" name="imagedriverend" class="custom-file-input" >';
+							echo '<label for="imagedriverend" class="custom-file-label">Driver (returned)</label>';
+							echo '</div>';
+						} else {
+							echo 'Driver (returned)  [<span class="text-success">Image uploaded</span>]';
+						}
+					?>
 				</div>
-				
-				<div class="form-group row">
-				<label for="imagedriversend" class="col-sm-2 form-control-label">Driver's (returned)</label>	
-								<?php 
-					if ( $value["imagedriverendfilename"] == "" ) { ?>
-						<input type="file" id="imagedriverend" name="imagedriverend" class="btn btn-info" >
-					<?php }//if
-					else { ?>
-						<span class="label label-success">Image uploaded</span>
-					<?php 
-					}// else ?>
+			</div>
+		</div>	
+		<div class="form-group row justify-content-center">
+			<div class="col-10">
+				<div class="input-group mt-3">
+					<?php
+						if ( $value["imagepassengerendfilename"] == "" ) {
+							echo '<div class="custom-file">';
+							echo '<input type="file" id="imagepassengerend" name="imagepassengerend" class="custom-file-input" >';
+							echo '<label for="imagepassengerend" class="custom-file-label">Passenger (returned)</label>';
+							echo '</div>';
+						} else {
+							echo 'Passenger (returned)  [<span class="text-success">Image uploaded</span>]';
+						}
+					?>
 				</div>
-				
-				<div class="form-group row">
-					<label for="imagepassengerend" class="col-sm-2 form-control-label">Passenger's (returned)</label>	
-						<?php 
-						if ( $value["imagepassengerendfilename"] == "" ) { ?>
-							<input type="file" id="imagepassengerend" name="imagepassengerend" class="btn btn-info" >
-						<?php }//if
-						else { ?>
-							<span class="label label-success">Image uploaded</span>
-						<?php 
-						}// else ?>
+			</div>
+		</div>
+		<div class="form-group row justify-content-center">
+			<div class="col-10">
+				<div class="input-group mt-3">
+					<?php
+						if ( $value["imagebackendfilename"] == "" ) {
+							echo '<div class="custom-file">';
+							echo '<input type="file" id="imagebackend" name="imagebackend" class="custom-file-input" >';
+							echo '<label for="imagebackend" class="custom-file-label">Back (returned)</label>';
+							echo '</div>';
+						} else {
+							echo 'Back (returned)  [<span class="text-success">Image uploaded</span>]';
+						}
+					?>
 				</div>
-				
-				<div class="form-group row">
-					<label for="imagebackend" class="col-sm-2 form-control-label">Back (returned)</label>	
-						<?php 
-						if ( $value["imagebackendfilename"] == "" ) { ?>
-							<input type="file" id="imagebackend" name="imagebackend" class="btn btn-info" >
-						<?php }//if
-						else { ?>
-							<span class="label label-success">Image uploaded</span>
-						<?php 
-						}// else ?>
+			</div>
+		</div>
+		<div class="form-group row justify-content-center">
+			<div class="col-10">
+				<div class="input-group mt-3">
+					<?php
+						if ( $value["imagedamageendfilename"] == "" ) {
+							echo '<div class="custom-file">';
+							echo '<input type="file" id="imagedamageend" name="imagedamageend" class="custom-file-input" >';
+							echo '<label for="imagedamageend" class="custom-file-label">Damage (returned)</label>';
+							echo '</div>';
+						} else {
+							echo 'Damage (returned)  [<span class="text-success">Image uploaded</span>]';
+						}
+					?>
 				</div>
-				
-				<div class="form-group row">
-					<label for="imagedamageend" class="col-sm-2 form-control-label">Damage (returned)</label>	
-						<?php 
-						if ( $value["imagedamageendfilename"] == "" ) { ?>
-							<input type="file" id="imagedamageend" name="imagedamageend" class="btn btn-info" >
-						<?php }//if
-						else { ?>
-							<span class="label label-success">Image uploaded</span>
-						<?php 
-						}// else ?>
-				</div>
+			</div>
+		</div>
+
+		<hr>
 	
 		
-		<div class="form-group row">
-			<label for="notes" class="col-sm-2 form-control-label">Notes</label>
-			<div class="col-sm-5">
-			  <textarea class="form-control" rows="4" id="notes" name="notes" placeholder="Notes"><?php echo $value["notes"]; ?></textarea> 
+			<div class="form-group row">
+				<label for="notes">Notes</label>
+				<textarea class="form-control" rows="4" id="notes" name="notes" placeholder="Notes"><?php echo $value["notes"]; ?></textarea> 
 			</div>
-		 </div>
-		 
-		 <div class="col-md-7">
-			<div class="alert alert-danger text-center" role="alert" ><h4>If you see any new damage to the vehicle, please notify us at <a href="mailto:<?php echo "$addressEmail";?>"><?php echo "$addressEmail";?></a>.</h4></div>
-	  </div>
-	  
-
-		 
-		 
-	</div>
+			
+			<div class="form-group row justify-content-center">
+				<div class="col-7">
+					<div class="alert alert-danger text-center" role="alert" ><h4>If you see any new damage to the vehicle, please notify us at <a href="mailto:<?php echo "$addressEmail";?>"><?php echo "$addressEmail";?></a>.</h4></div>
+				</div>
+			</div>
 		
 			<input type="hidden" name="hiddenID" id="hiddenID" value="<?php echo $value["IDvf"]; ?>" />
 			<input type="hidden" name="vehiclenum" id="vehiclenum" value="<?php echo $value["vehiclenum"]; ?>" />
 			
-		<div class="col-md-12 col-md-offset-3">
-			<input type="submit" value="Submit" id="submitbutton" class="btn btn-primary">
-		</div>
+			<div class="form-group row justify-content-center">
+				<input type="submit" value="Submit" id="submitbutton" class="btn btn-primary">
+			</div>
 	   
 	   	</fieldset>
 	    
@@ -305,16 +338,13 @@ else {
 function uploadAndProcessImageFile($image, $sql) {
 	
 		$vehiclenum = $_POST['vehiclenum'];
-		//$uniquename = $_SERVER['REMOTE_USER'];
-		
-		$uniquename = $_SERVER['REDIRECT_REMOTE_USER'];
 	
 		$file_name = $_FILES[$image]['name'];
 		$file_size = $_FILES[$image]['size'];
 		$file_tmp = $_FILES[$image]['tmp_name'];
 		$file_type = $_FILES[$image]['type'];
 		
-		$todayDate = date(Ymd);
+		$todayDate = date('Ymd');
 		$temp = explode(".", $_FILES[$image]["name"]);
 		$newfilename = $todayDate . $vehiclenum . $uniquename . $image . round(microtime(true)) . '.' . end($temp);
 		move_uploaded_file($_FILES[$image]["tmp_name"], "admin/uploads/" . $newfilename);
