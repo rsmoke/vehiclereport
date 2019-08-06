@@ -1,6 +1,8 @@
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/ceal_config.php');
 require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
+
+if ($isAdmin){
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +15,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 <?php include("../_navbar.php");?>
 	
     <div class="container theme-showcase" role="main">
-        <h1>Admin Update/Review CEAL Vehicle Report</h1>
+        <h2>Admin Update/Review CEAL Vehicle Report</h2>
 
 	
 	<div id="popup"></div>
@@ -36,22 +38,22 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 		}//while
 		?>
 		
-		<table class="table table-striped table-bordered">
+		<table class="table table-sm table-responsive table-striped table-bordered">
           <thead>
               <tr>
-				<th></th>
-				<th>Date</th>
-				<th>Name</th>
-				<th>Admin Status</th>
-				<th>Vehicle #</th>
-				<th>Mileage Driven</th>
-				<th>Mileage (Depart)</th>
-				<th>Fuel (Depart)</th>
-				<th>Mileage (Return)</th>
-				<th>Fuel (Return)</th>
-				<th>Parking</th>
-				<th>Student Status</th>
-				<th>ID</th>
+				<th scope="col">Edit</th>
+				<th scope="col">Date</th>
+				<th scope="col">Name</th>
+				<th scope="col">Admin Status</th>
+				<th scope="col">Vehicle #</th>
+				<th scope="col">Mileage Driven</th>
+				<th scope="col">Mileage (Depart)</th>
+				<th scope="col">Fuel (Depart)</th>
+				<th scope="col">Mileage (Return)</th>
+				<th scope="col">Fuel (Return)</th>
+				<th scope="col">Parking</th>
+				<th scope="col">Student Status</th>
+				<th scope="col">ID</th>
               </tr>
             </thead>
             <tbody>	
@@ -63,7 +65,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 		?>
 			<tr>
 			
-				<td><a class="updateFormAdmin" href='#'>Update</a> | <a class="deleteForm" href='#'>Delete</a> </td>
+				<td><a class="updateFormAdmin" href='#' data-toggle="tooltip" data-placement="top" title="Update"><i class="fa fa-sm fa-edit text-primary"></i></a> <a class="deleteForm" href='#' data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-sm fa-trash text-danger"></i></a></td>
 				
 				<td> <?php echo $value["dateEvent"]; ?> </td>
 				
@@ -86,7 +88,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 				
 				<td>
 				<?php
-					$mileageDriven = $value["mileageReturn"] - $value["mileageDepart"];	
+					$mileageDriven = ((isset($value["mileageReturn"]))? $value["mileageReturn"] : $value["mileageDepart"]) - $value["mileageDepart"];	
 					echo $mileageDriven;
 				?></td>
 				
@@ -136,4 +138,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 
  </body>
 </html>
-
+<?php
+}else{
+	redirect_to();
+}
+?>

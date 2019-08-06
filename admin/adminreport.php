@@ -1,6 +1,8 @@
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/ceal_config.php');
 require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
+
+if ($isAdmin){
 ?>
 
 <!DOCTYPE html>
@@ -8,8 +10,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 <?php include("../_head.php"); ?>
 
 <?php
-
-$getDownloadData = $_REQUEST['datadownload'];
 
 $termStartDate = "";
 $termEndDate = "";
@@ -22,20 +22,17 @@ $mileageTotal = "";
 <?php include("../_navbar.php");?>
 	
     <div class="container theme-showcase" role="main">
-        <h1>Admin Report</h1>
-
-
-		
-		<form action="csvdownload.php" method="post">
-			<input type="hidden" name="datadownload" value="true">
-			<input type="submit" name="Submit" value="Download data in CSV format">
-		</form>
-		
-		<br>
+      <h2>Admin Report
+				<small class="text-muted">
+					<a href='csvdownload.php' role='button'data-toggle="tooltip" data-placement="top" title="Download as CSV">
+						<i class="fa fa-sm fa-download text-success"></i>
+					</a>
+				</small>
+			</h2>
 
 
 <?php	
-		$termToUse = $_POST['term'];
+		$termToUse = (isset($_POST['term']))? $_POST['term'] : 2260;
 			
 		$sqlTerm = "SELECT * FROM term ORDER BY term ASC LIMIT 10";	
 		
@@ -53,6 +50,7 @@ $mileageTotal = "";
 
 		?>
 		
+		<h4>Select a specific term below to view those records</h4>
 		<label for="term">Select a Term:</label><form method="post" id="formterms" name="formterms"><select name="term">
 			<?php foreach ($queryResultTerm as $valueTerm )
 				{
@@ -113,8 +111,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			$termEndDate = $value["term_end_dt"];
 		}//foreach
 	
-
-		//$sql = "SELECT vehiclenum, COUNT(vehiclenum) AS total FROM tran_vf WHERE (dateEvent >= '$termStartDate' AND dateEvent <= '$termEndDate') ORDER BY vehiclenum DESC";
 		$sql = "SELECT vehiclenum, COUNT(vehiclenum) as totalCars FROM transportation_vf WHERE (dateEvent >= '$termStartDate' AND dateEvent <= '$termEndDate') GROUP BY vehiclenum ORDER BY vehiclenum DESC";
 
 		if(!$result = $db->query($sql))
@@ -236,4 +232,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
  </body>
 </html>
-
+<?php
+}else{
+	redirect_to();
+}
+?>
