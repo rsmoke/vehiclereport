@@ -10,15 +10,12 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 
     <?php include("_navbar.php"); ?>
 	<div class="container" role="main">
-        <h1 id="title">Update<?php echo "$siteTitle";?></h1>
+        <h2 id="title">Update <?php echo "$siteTitle";?></h2>
 	
 	<div id="popup"></div>
 
 	<div id="tabledata">
 	<?php
-
-// 		global $db;
-// 		$db = new mysqli('localhost', $connectionUserText, $connectionsUserPassword, $db);
 		
 		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
 		

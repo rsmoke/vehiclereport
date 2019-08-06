@@ -11,7 +11,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
     <?php include("_navbar.php");?>
 
     <div class="container" role="main">
-    	<h1 id="title"><?php echo "$siteTitle";?></h1>
+    	<h2 id="title"><?php echo "$siteTitle";?></h2>
 	<?php 
 	$today = "";
   if ($today == "") {
