@@ -1,3 +1,3 @@
 # vehiclereport
 
-## A means to check out vehicles for reserach use
+## A means to check out vehicles for research use
