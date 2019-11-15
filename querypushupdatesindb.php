@@ -2,12 +2,15 @@
 	//include_once("connect.php");
 	require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/ceal_config.php');
 	require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
+        require_once('library/HTMLPurifier.auto.php');
+        $purifier = new HTMLPurifier();
+
 	
-	$mileageReturn = $_POST['mileageReturn'];
-	$fuelReturn = $_POST['fuelReturn'];
-	$parking = $_POST['parking'];
-	$notes = $_POST['notes'];
-	$id = $_POST['hiddenID'];
+	$mileageReturn = $purifier->purify($_POST['mileageReturn']);
+	$fuelReturn = $purifier->purify($_POST['fuelReturn']);
+	$parking = $purifier->purify($_POST['parking']);
+	$notes = $purifier->purify($_POST['notes']);
+	$id = $purifier->purify($_POST['hiddenID']);
 	$mod_on = date('Y-m-d H:i:s');
 	
 	
@@ -39,7 +42,7 @@
 	
 function uploadAndProcessImageFile($image, $sql) {
 	
-		$vehiclenum = $_POST['vehiclenum'];
+		$vehiclenum = $purifier->purify($_POST['vehiclenum']);
 	
 		$file_name = $_FILES[$image]['name'];
 		$file_size = $_FILES[$image]['size'];
@@ -87,8 +90,3 @@ function uploadAndProcessImageFile($image, $sql) {
 }//function uploadAndProcessImageFile
 
 ?>
- 
-
-  
-
-  
