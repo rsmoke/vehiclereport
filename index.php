@@ -1,6 +1,9 @@
 <?php
 require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/ceal_config.php');
 require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
+require_once('library/HTMLPurifier.auto.php');
+$purifier = new HTMLPurifier();
+
 ?>
 
 <!DOCTYPE html>
@@ -27,19 +30,19 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 
 		$thereIsADamageImage = false;
 
-		$uniquename = $_POST['uniquename'];
-		$firstname = $_POST['firstname'];
-		$lastname = $_POST['lastname'];
-		$firstandlastname = $_POST['firstandlastname'];
-		$driveruniquename = $_POST['driveruniquename'];
-		$driverfirstandlastname = $_POST['driverfirstandlastname'];
-		$phone = $_POST['phone'];
-		$vehiclenum = $_POST['vehiclenum'];
-		$program = $_POST['program'];
-		$dateEvent = $_POST['datetimepickerToday'];
-		$mileageDepart = $_POST['mileageDepart'];
-		$fuelDepart = $_POST['fuelDepart'];
-		$notes = $_POST['notes'];
+		$uniquename = $purifier->purify($_POST['uniquename']);
+		$firstname = $purifier->purify($_POST['firstname']);
+		$lastname = $purifier->purify($_POST['lastname']);
+		$firstandlastname = $purifier->purify($_POST['firstandlastname']);
+		$driveruniquename = $purifier->purify($_POST['driveruniquename']);
+		$driverfirstandlastname = $purifier->purify($_POST['driverfirstandlastname']);
+		$phone = $purifier->purify($_POST['phone']);
+		$vehiclenum = $purifier->purify($_POST['vehiclenum']);
+		$program = $purifier->purify($_POST['program']);
+		$dateEvent = $purifier->purify($_POST['datetimepickerToday']);
+		$mileageDepart = $purifier->purify($_POST['mileageDepart']);
+		$fuelDepart = $purifier->purify($_POST['fuelDepart']);
+		$notes = $purifier->purify($_POST['notes']);
 			
 		// $lastKnownLocation = $_POST['lastKnownLocation'];
 		
@@ -295,8 +298,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 
 
 function processImageFile($image, $errorsFiles) {
-	$vehiclenum = $_POST['vehiclenum'];
-	$uniquename = $_POST['uniquename'];
+	$vehiclenum = $purifier->purify($_POST['vehiclenum']);
+	$uniquename = $purifier->purify($_POST['uniquename']);
 
 	$file_name = $_FILES[$image]['name'];
 	$file_size = $_FILES[$image]['size'];
