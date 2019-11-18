@@ -15,7 +15,7 @@ $purifier = new HTMLPurifier();
 
     <div class="container" role="main">
     	<h2 id="title"><?php echo "$siteTitle";?></h2>
-	<?php 
+	<?php
 	$today = "";
   if ($today == "") {
     	$today = date("m")."/".date("d")."/".date("Y");
@@ -43,10 +43,10 @@ $purifier = new HTMLPurifier();
 		$mileageDepart = $purifier->purify($_POST['mileageDepart']);
 		$fuelDepart = $purifier->purify($_POST['fuelDepart']);
 		$notes = $purifier->purify($_POST['notes']);
-			
+
 		// $lastKnownLocation = $_POST['lastKnownLocation'];
-		
-		
+
+
 		if (empty($_POST["uniquename"])) {
 			$errors .= "Your uniqname<br>";
 		}//if
@@ -71,27 +71,27 @@ $purifier = new HTMLPurifier();
 		if ($_POST["fuelDepart"] == 0 ) {
 			$errors .= "Fuel<br>";
 		}//if
-		
+
 		 if( $errors != "" ) {
 			$errors = "<div class=\"alert alert-danger\" role=\"alert\"><h4>The following fields are required: </h4>".$errors."</div>";
 			echo $errors;
 		 }//if
-		 
+
 		 $errorsFilesString = "";
 		 $errorsFiles = "";
-		 
+
 		$errorsFiles = processImageFile("imagefrontstart", $errorsFiles);
 		$errorsFiles = processImageFile("imagedriverstart", $errorsFiles);
 		$errorsFiles = processImageFile("imagepassengerstart", $errorsFiles);
 		$errorsFiles = processImageFile("imagebackstart", $errorsFiles);
-	
+
 	// }//if POST
 		if ($errorsFiles != "") {
 			$errorsFilesString = "<div class=\"alert alert-danger\" role=\"alert\"><h4>The following errors occurred with file upload:</h4>". $errorsFiles . "</div>";
 			echo $errorsFilesString;
 		} else {
 			//Upload files if no errors
-			if( ($errors == "") && (isset($vehiclenum))) {	
+			if( ($errors == "") && (isset($vehiclenum))) {
 				$imagefrontstartfilename = uploadImageFile("imagefrontstart", $vehiclenum, $uniquename);
 				$imagedriverstartfilename = uploadImageFile("imagedriverstart", $vehiclenum, $uniquename);
 				$imagepassengerstartfilename = uploadImageFile("imagepassengerstart", $vehiclenum, $uniquename);
@@ -106,16 +106,16 @@ $purifier = new HTMLPurifier();
 		}//else
 	}
 
-    
+
   if ($_SERVER['REQUEST_METHOD'] == 'POST' && $errors == "" && $errorsFilesString == "")  {
-						
+
 			$dateEvent = strtotime($dateEvent);
 			$dateEventStamp = date("Y-m-d H:i:s", $dateEvent);
-			
+
 			if ( $thereIsADamageImage == false ) {
-				$sql = "INSERT INTO transportation_vf (uniquename, firstname, lastname, firstandlastname, driveruniquename, driverfirstandlastname, program, dateEvent, mileageDepart, fuelDepart, notes, phone, vehiclenum, imagefrontstartfilename, imagedriverstartfilename, imagepassengerstartfilename, imagebackstartfilename, imagedamagestartfilename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";	
+				$sql = "INSERT INTO transportation_vf (uniquename, firstname, lastname, firstandlastname, driveruniquename, driverfirstandlastname, program, dateEvent, mileageDepart, fuelDepart, notes, phone, vehiclenum, imagefrontstartfilename, imagedriverstartfilename, imagepassengerstartfilename, imagebackstartfilename, imagedamagestartfilename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			} else {
-				$sql = "INSERT INTO transportation_vf (uniquename, firstname, lastname, firstandlastname, driveruniquename, driverfirstandlastname, program, dateEvent, mileageDepart, fuelDepart, notes, phone, vehiclenum, imagefrontstartfilename, imagedriverstartfilename, imagepassengerstartfilename, imagebackstartfilename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";	
+				$sql = "INSERT INTO transportation_vf (uniquename, firstname, lastname, firstandlastname, driveruniquename, driverfirstandlastname, program, dateEvent, mileageDepart, fuelDepart, notes, phone, vehiclenum, imagefrontstartfilename, imagedriverstartfilename, imagepassengerstartfilename, imagebackstartfilename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			}//else
 
 			$stmt = $db->stmt_init();
@@ -125,19 +125,19 @@ $purifier = new HTMLPurifier();
 			} else {
 				$stmt->bind_param('sssssssssssssssss', $uniquename, $firstname, $lastname, $firstandlastname, $driveruniquename, $driverfirstandlastname, $program, $dateEventStamp, $mileageDepart, $fuelDepart, $notes, $phone, $vehiclenum, $imagefrontstartfilename, $imagedriverstartfilename, $imagepassengerstartfilename, $imagebackstartfilename);
 			}//else
-						
+
 			$stmt->execute();
-			
+
 			echo $stmt->error;
-			
+
 			$stmt->close();
-			
+
 			$db->close();
-			
+
 			echo "<div class=\"alert alert-success\"><strong>Your information has been submitted.</strong> Upon return, please use the \"Update Form\" link to enter return milage, fuel level, and parking location.<br><br>
-			
+
 			You may close this window.</div>";
-						
+
 		} else  {
 			$name = ldapGleaner($uniquename);
   ?>
@@ -149,12 +149,12 @@ $purifier = new HTMLPurifier();
 				<label for= "datetimepickerToday">Date</label>
 				<input type="text" class="form-control" id="datetimepickerToday" name="datetimepickerToday" value="<?php echo $today ?>">
 			</div>
-				
+
 			<div class="form-group row">
 				<label for="uniquename">Your uniqname</label>
 				<input type="text" class="form-control" id="uniquename" name="uniquename" value="<?php echo (isset($uniquename))? $uniquename : "";?>">
 			</div>
-				
+
 			<input type="hidden" class="form-control" id="firstname" name="firstname" placeholder="First Name"  value="<?php echo $name[0] ?>">
 			<input type="hidden" class="form-control" id="lastname" name="lastname" placeholder="Last Name" value="<?php echo $name[1] ?>">
 
@@ -162,17 +162,17 @@ $purifier = new HTMLPurifier();
 				<label for="firstandlastname">Your first and last name</label>
 				<input type="text" class="form-control" id="firstandlastname" name="firstandlastname" placeholder="Your First and Last Name" value="<?php echo $name[0]." ".$name[1] ?>">
 			</div>
-			
+
 			<div class="form-group form-check row">
 				<input class="form-check-input" type="checkbox" id="checkboxareyoudriver" name="checkboxareyoudriver" <?php if(isset($_POST['checkboxareyoudriver'])) echo "checked='checked'"; ?>>
 				<label class="form-check-label" for="checkboxareyoudriver">Check if you are the driver</label>
 			</div>
-			
+
 			<div class="form-group row">
 				<label for="driveruniquename">Driver's uniqname</label>
 				<input type="text" class="form-control" id="driveruniquename" name="driveruniquename" value="<?php echo (isset($driveruniquename))? $driveruniquename : "";?>">
 			</div>
-				
+
 			<div class="form-group row">
 				<label for="driverfirstandlastname">Driver's first and last name</label>
 				<input type="text" class="form-control" id="driverfirstandlastname" name="driverfirstandlastname" value="<?php echo (isset($driverfirstandlastname))? $driverfirstandlastname : "";?>">
@@ -180,19 +180,19 @@ $purifier = new HTMLPurifier();
 
 			<div class="form-group row">
 				<label for="lastname" >Phone</label>
-				<input type="text" class="form-control" id="phone" name="phone" placeholder="(734) 555-5555" value="<?php (isset($phone))? $phone : "";?>">
+				<input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number" value="<?php (isset($phone))? $phone : "";?>">
 			</div>
-			
+
 			<div class="form-group row">
 				<label for="vehiclenumber">Vehicle Number</label>
 				<input type="text" class="form-control" id="vehiclenum" name="vehiclenum" placeholder="Type in vehicle number to locate vehicle" value="<?php echo (isset($vehiclenum))? $vehiclenum : ""; ?>" onkeyup="findVehicle(this.value)">
 			</div>
-			
+
 			<div class="form-group row">
 				<label for="Location">Location</label>
 				<div id="lastKnownLocation"></div>
 			</div>
-			
+
 			<div class="form-group row">
 				<label>Course Number / Program</label>
 				<textarea class="form-control" rows="4" id="program" name="program" placeholder="Course Number / Program"></textarea>
@@ -202,7 +202,7 @@ $purifier = new HTMLPurifier();
 				<label for="mileageDepart">Mileage (Depart)</label>
 				<input type="text" class="form-control" id="mileageDepart" name="mileageDepart"  min="0" placeholder="Mileage (Depart)" value="<?php echo (isset($mileageDepart))? $mileageDepart : ""; ?>">
 			</div>
-				
+
 			<!--fuel depart-->
 			<div class="form-group row">
 				<label for="fuel-gauge-controlDepart">Fuel (Depart)</label>
@@ -213,7 +213,7 @@ $purifier = new HTMLPurifier();
 					</div>
 				<input type="hidden" name="fuelDepart" id="fuelDepart" value="">
 			</div>
-			
+
 			<br><br>
 			<h5 class="bg-light">Upload car images</h5>
 			<div class="form-group row justify-content-center">
@@ -225,7 +225,7 @@ $purifier = new HTMLPurifier();
 						</div>
 					</div>
 				</div>
-			</div>	
+			</div>
 			<div class="form-group row justify-content-center">
 				<div class="col-10">
 					<div class="input-group mt-3">
@@ -235,7 +235,7 @@ $purifier = new HTMLPurifier();
 							</div>
 					</div>
 				</div>
-			</div>	
+			</div>
 			<div class="form-group row justify-content-center">
 				<div class="col-10">
 					<div class="input-group mt-3">
@@ -245,7 +245,7 @@ $purifier = new HTMLPurifier();
 							</div>
 					</div>
 				</div>
-			</div>	
+			</div>
 			<div class="form-group row justify-content-center">
 				<div class="col-10">
 					<div class="input-group mt-3">
@@ -255,7 +255,7 @@ $purifier = new HTMLPurifier();
 							</div>
 					</div>
 				</div>
-			</div>	
+			</div>
 			<div class="form-group row justify-content-center">
 				<div class="col-10">
 					<div class="input-group mt-3">
@@ -274,30 +274,31 @@ $purifier = new HTMLPurifier();
 				<textarea class="form-control" rows="4" id="notes" name="notes" placeholder="Notes"></textarea>
 			</div>
 
-			<div class="form-group row justify-content-center">  	  
+			<div class="form-group row justify-content-center">
 				<div class="col-md-7">
 					<div class="alert alert-danger text-center" role="alert" >
 						<h4>If you see any new damage to the vehicle, please notify us at <a href="mailto:<?php echo "$addressEmail";?>"><?php echo "$addressEmail";?></a>.</h4>
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="form-group row justify-content-center">
 				<input type="submit" value="Submit" id="submitbutton" class="btn btn-primary">
 			</div>
-				
+
 		</fieldset>
  	</form>
-				
+
 			<br><br>
-			
+
 <?php }//else ?>
     </div> <!-- /container -->
-	
+
 <?php
 
 
 function processImageFile($image, $errorsFiles) {
+	$purifier = new HTMLPurifier();
 	$vehiclenum = $purifier->purify($_POST['vehiclenum']);
 	$uniquename = $purifier->purify($_POST['uniquename']);
 
@@ -305,8 +306,8 @@ function processImageFile($image, $errorsFiles) {
 	$file_size = $_FILES[$image]['size'];
 	$file_tmp = $_FILES[$image]['tmp_name'];
 	$file_type = $_FILES[$image]['type'];
-	
-	if (($file_name == "") || ($file_size < 1)) { 
+
+	if (($file_name == "") || ($file_size < 1)) {
 
 			switch($image) {
 				case "imagefrontstart":
@@ -321,10 +322,10 @@ function processImageFile($image, $errorsFiles) {
 				case "imagebackstart":
 					$errorsFiles .= "Picture of back of the vehicle is required.<br>";
 				break;
-				
+
 		}//switch
 	}//if
-	 
+
 	if ( $file_size > 20971520 ) {
         $errorsFiles .= "File size must be under 20 MB.<br>";
     }//if
@@ -343,13 +344,13 @@ function uploadImageFile($image, $vehiclenum, $uniquename) {
 }//function uploadImageFile
 
 ?>
-	
+
     <?php include("_footer.php"); ?>
 
 <script>
 // $(window).load(function() {
 $(document).ready(function() {
-   var vehicleToFindOnLoad = document.getElementById('vehiclenum').value; 
+   var vehicleToFindOnLoad = document.getElementById('vehiclenum').value;
    findVehicle(vehicleToFindOnLoad);
 });
 
@@ -365,7 +366,7 @@ function findVehicle(vehicleNum) {
 		vehicleNum: vehicleNum
 	},
 	success: function(response) {
-		document.getElementById('lastKnownLocation').innerHTML=response; 
+		document.getElementById('lastKnownLocation').innerHTML=response;
 	},
 	error: function(xhr) {
     console.log("error");
@@ -393,7 +394,7 @@ $( function () {
       51: 'normal'
     }
   });
-  
+
 
   // jQuery UI slider widget
   $('div#fuel-gauge-controlDepart').slider({
