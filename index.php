@@ -8,6 +8,43 @@ $purifier = new HTMLPurifier();
 
 <!DOCTYPE html>
 <html lang="en">
+
+	<script>
+		function validate_uniqname(str) {
+			document.getElementById('checkboxareyoudriver').checked = false;
+		    if (str == "") {
+		        return;
+		    } else {
+		        if (window.XMLHttpRequest) {
+		            // code for IE7+, Firefox, Chrome, Opera, Safari
+		            xmlhttp = new XMLHttpRequest();
+		        } else {
+		            // code for IE6, IE5
+		            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		        }
+		        xmlhttp.onreadystatechange = function() {
+		            if (this.readyState == 4 && this.status == 200) {
+		              if (this.responseText == "FALSE") {
+		              		document.getElementById("driverfirstandlastname").value = "";
+		                   if (!$('#uniqname_error').hasClass('uniqname_error_error')) {
+			                   $('#uniqname_error').addClass('uniqname_error_error');
+			                   $('#uniqname_error').css("font-weight", "bold");
+			                   $('#uniqname_error').prepend('<span style="color:red;margin-left:5px;">uniqname is not valid</span>');
+		              			}
+		           		} else {
+		                 $('#uniqname_error').removeClass('uniqname_error_error');
+		                 $('#uniqname_error').empty();
+		                 document.getElementById("driverfirstandlastname").value = this.responseText;
+		              }
+		            }
+		        };
+		        xmlhttp.open("GET","ldapGleaner2.php?uniqname="+str,true);
+
+		        xmlhttp.send();
+		    }
+		}
+	</script>
+
     <?php include("_head.php"); ?>
 
   <body role="document">
@@ -168,9 +205,10 @@ $purifier = new HTMLPurifier();
 				<label class="form-check-label" for="checkboxareyoudriver">Check if you are the driver</label>
 			</div>
 
+			<div id='uniqname_error'></div>
 			<div class="form-group row">
 				<label for="driveruniquename">Driver's uniqname</label>
-				<input type="text" class="form-control" id="driveruniquename" name="driveruniquename" value="<?php echo (isset($driveruniquename))? $driveruniquename : "";?>">
+				<input onchange="validate_uniqname(this.value)" type="text" class="form-control" id="driveruniquename" name="driveruniquename" value="<?php echo (isset($driveruniquename))? $driveruniquename : "";?>">
 			</div>
 
 			<div class="form-group row">
@@ -417,6 +455,7 @@ $( function () {
   $("#checkboxareyoudriver").click(function() {
      // If change is confirmed this checks if the checkbox is checked
         if ($(this).prop("checked")) {
+        	$("#uniqname_error").html('');
 			$("#driveruniquename").val($("#uniquename").val());
 			$("#driverfirstandlastname").val($("#firstandlastname").val());
     }

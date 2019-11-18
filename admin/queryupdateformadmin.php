@@ -67,13 +67,6 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 				</td>
 			</tr>
 
-
-
-		<!-- <div id="fuelIsTooLow" class="alert alert-danger" role="alert"><h4>You need to go to Transportation Services (1213 Kipke Dr, Ann Arbor, MI 48109) to refuel this vehicle immediately.</h4></div> -->
-
-
-
-
 			<tr>
 			  <td class="text-right">Parking</td>
 			  <td><input type="text" class="form-control" id="parking" name="parking"  value="<?php echo $value["parking"]; ?>"></td>
