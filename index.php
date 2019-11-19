@@ -376,11 +376,85 @@ function uploadImageFile($image, $vehiclenum, $uniquename) {
 		$todayDate = date('Ymd');
 		$temp = explode(".", $_FILES[$image]["name"]);
 		$newfilename = $todayDate . $vehiclenum . $uniquename . $image . round(microtime(true)) . '.' . end($temp);
-		move_uploaded_file($_FILES[$image]["tmp_name"], "admin/uploads/" . $newfilename);
+   // resize image before uploading 
+                $sourcefile = $_FILES[$image]["tmp_name"];
+                $max_width = 400;
+                $max_height = 400;
+                $type = $_FILES[$image]['type'];
+                $endfile = "/Users/brita/Documents/images-cars/temp_file.jpg";
+                ResizeImageFile($sourcefile, $max_width, $max_height, $newfilename, $type);
+//		move_uploaded_file($_FILES[$image]["tmp_name"], "admin/uploads/" . $newfilename);
+// 		rename($endfile, "admin/uploads/" . $newfilename);
 
 	return $newfilename;
 }//function uploadImageFile
 
+function ResizeImageFile($sourcefile, $max_width, $max_height, $endfile, $type) {
+   // Load image and get image size.
+   switch($type){
+        case'image/png':
+                $img = imagecreatefrompng($sourcefile);
+                break;
+                case'image/jpeg':
+                $img = imagecreatefromjpeg($sourcefile);
+                break;
+                case'image/gif':
+                $img = imagecreatefromgif($sourcefile);
+                break;
+                default :
+                return 'Un supported format';
+    }
+
+ //   $width = imagesx($img);
+ //   $height = imagesy($img);
+        list($width, $height) = getimagesize($sourcefile);
+  // count new width and height
+    if ($width > $height) {
+        if ($width < $max_width) {
+                $newwidth = $width;
+        }
+        else {
+            $newwidth = $max_width;
+        }
+        $divisor = $width / $newwidth;
+        $newheight = floor( $height / $divisor);
+   }
+   else {
+         if ($height < $max_height) {
+             $newheight = $height;
+         }
+         else {
+             $newheight =  $max_height;
+         }
+         $divisor = $height / $newheight;
+         $newwidth = floor( $width / $divisor );
+   }
+   // Create a new temporary image.
+   $tmpimg = imagecreatetruecolor( $newwidth, $newheight );
+
+    imagealphablending($tmpimg, false);
+    imagesavealpha($tmpimg, true);
+    // Copy and resize old image into new image.
+    imagecopyresampled($tmpimg, $img, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+    //compressing the file
+    switch($type){
+        case'image/png':
+                imagepng($tmpimg, $endfile, 0);
+                break;
+        case'image/jpeg':
+                imagejpeg($tmpimg, $endfile, 100);
+                break;
+        case'image/gif':
+                imagegif($tmpimg, $endfile, 0);
+                break;
+     }
+
+   // release the memory
+   imagedestroy($tmpimg);
+   imagedestroy($img);
+   return $endfile;
+
+} // function ResizeImageFile
 ?>
 
     <?php include("_footer.php"); ?>
