@@ -17,7 +17,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 	<div id="tabledata">
 	<?php
 		
-		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
+//		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
+		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' OR driveruniquename = '$uniquename' OR driveruniquename2 = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
 		
 		if(!$result = $db->query($sql))
 		{
