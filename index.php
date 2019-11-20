@@ -8,9 +8,11 @@ $purifier = new HTMLPurifier();
 
 <!DOCTYPE html>
 <html lang="en">
+<script type="text/javascript" src="js/dist/purify.min.js"></script>
 
 	<script>
 		function validate_uniqname(str, name_id) {
+                        var str = DOMPurify.sanitize(str);
                         var div_id = name_id + "_error";
 			document.getElementById('checkboxareyoudriver').checked = false;
 		    if (str == "") {
