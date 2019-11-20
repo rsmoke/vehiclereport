@@ -10,7 +10,8 @@ $purifier = new HTMLPurifier();
 <html lang="en">
 
 	<script>
-		function validate_uniqname(str) {
+		function validate_uniqname(str, name_id) {
+                        var div_id = name_id + "_error";
 			document.getElementById('checkboxareyoudriver').checked = false;
 		    if (str == "") {
 		        return;
@@ -25,16 +26,16 @@ $purifier = new HTMLPurifier();
 		        xmlhttp.onreadystatechange = function() {
 		            if (this.readyState == 4 && this.status == 200) {
 		              if (this.responseText == "FALSE") {
-		              		document.getElementById("driverfirstandlastname").value = "";
-		                   if (!$('#uniqname_error').hasClass('uniqname_error_error')) {
-			                   $('#uniqname_error').addClass('uniqname_error_error');
-			                   $('#uniqname_error').css("font-weight", "bold");
-			                   $('#uniqname_error').prepend('<span style="color:red;margin-left:5px;">uniqname is not valid</span>');
+		              		document.getElementById(name_id).value = "";
+		                   if (!$('#'+div_id).hasClass('uniqname_error_error')) {
+			                   $('#'+div_id).addClass('uniqname_error_error');
+			                   $('#'+div_id).css("font-weight", "bold");
+			                   $('#'+div_id).prepend('<span style="color:red;margin-left:5px;">uniqname is not valid</span>');
 		              			}
 		           		} else {
-		                 $('#uniqname_error').removeClass('uniqname_error_error');
-		                 $('#uniqname_error').empty();
-		                 document.getElementById("driverfirstandlastname").value = this.responseText;
+		                 $('#'+div_id).removeClass('uniqname_error_error');
+		                 $('#'+div_id).empty();
+		                 document.getElementById(name_id).value = this.responseText;
 		              }
 		            }
 		        };
@@ -206,10 +207,10 @@ $purifier = new HTMLPurifier();
 				<label class="form-check-label" for="checkboxareyoudriver">Check if you are the driver</label>
 			</div>
 
-			<div id='uniqname_error'></div>
+			<div id='driverfirstandlastname_error'></div>
 			<div class="form-group row">
 				<label for="driveruniquename">Driver's uniqname</label>
-				<input onchange="validate_uniqname(this.value)" type="text" class="form-control" id="driveruniquename" name="driveruniquename" value="<?php echo (isset($driveruniquename))? $driveruniquename : "";?>">
+				<input onchange="validate_uniqname(this.value, 'driverfirstandlastname')" type="text" class="form-control" id="driveruniquename" name="driveruniquename" value="<?php echo (isset($driveruniquename))? $driveruniquename : "";?>">
 			</div>
 
 			<div class="form-group row">
@@ -217,9 +218,10 @@ $purifier = new HTMLPurifier();
 				<input type="text" class="form-control" id="driverfirstandlastname" name="driverfirstandlastname" value="<?php echo (isset($driverfirstandlastname))? $driverfirstandlastname : "";?>">
 			</div>
 
+			<div id='driverfirstandlastname2_error'></div>
 			<div class="form-group row">
 				<label for="driveruniquename2">Second Driver's uniqname</label>
-				<input onchange="validate_uniqname(this.value)" type="text" class="form-control" id="driveruniquename2" name="driveruniquename2" value="<?php echo (isset($driveruniquename2))? $driveruniquename2 : "";?>">
+				<input onchange="validate_uniqname(this.value, 'driverfirstandlastname2')" type="text" class="form-control" id="driveruniquename2" name="driveruniquename2" value="<?php echo (isset($driveruniquename2))? $driveruniquename2 : "";?>">
 			</div>
 
 			<div class="form-group row">
@@ -466,7 +468,7 @@ $( function () {
   $("#checkboxareyoudriver").click(function() {
      // If change is confirmed this checks if the checkbox is checked
         if ($(this).prop("checked")) {
-        	$("#uniqname_error").html('');
+        	$("#driverfirstandlastname_error").html('');
 			$("#driveruniquename").val($("#uniquename").val());
 			$("#driverfirstandlastname").val($("#firstandlastname").val());
     }
