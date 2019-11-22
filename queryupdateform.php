@@ -347,11 +347,16 @@ function uploadAndProcessImageFile($image, $sql) {
 		$file_tmp = $_FILES[$image]['tmp_name'];
 		$file_type = $_FILES[$image]['type'];
 
+                $max_width = 800;
+                $max_height = 800;
+
 		$todayDate = date('Ymd');
 		$temp = explode(".", $_FILES[$image]["name"]);
 		$newfilename = $todayDate . $vehiclenum . $uniquename . $image . round(microtime(true)) . '.' . end($temp);
-		move_uploaded_file($_FILES[$image]["tmp_name"], "admin/uploads/" . $newfilename);
+                $newsizefilename = "admin/uploads/" . $newfilename;
+                ResizeImageFile($file_tmp, $max_width, $max_height, $newsizefilename, $file_type);
 
+//		move_uploaded_file($_FILES[$image]["tmp_name"], "admin/uploads/" . $newfilename);
 
 		if ( $file_name != "" && $image == "imagefrontsite") {
 			$sql .= ", imagefrontsitefilename='$newfilename' ";
@@ -386,6 +391,89 @@ function uploadAndProcessImageFile($image, $sql) {
 
 	return $sql;
 }//function uploadAndProcessImageFile
+
+function ResizeImageFile($sourcefile, $max_width, $max_height, $endfile, $type) {
+   // Load image and get image size.
+   switch($type){
+        case'image/png':
+                $img = imagecreatefrompng($sourcefile);
+                break;
+                case'image/jpeg':
+                $img = imagecreatefromjpeg($sourcefile);
+                break;
+                case'image/gif':
+                $img = imagecreatefromgif($sourcefile);
+                break;
+                default :
+                return 'Un supported format';
+    }
+    $img= ImageFixOrientation($img, $sourcefile);
+    $width = imagesx($img);
+    $height = imagesy($img);
+  // count new width and height
+    if ($width > $height) {
+        if ($width < $max_width) {
+                $newwidth = $width;
+        }
+        else {
+            $newwidth = $max_width;
+        }
+        $divisor = $width / $newwidth;
+        $newheight = floor( $height / $divisor);
+   }
+   else {
+         if ($height < $max_height) {
+             $newheight = $height;
+         }
+         else {
+             $newheight =  $max_height;
+         }
+         $divisor = $height / $newheight;
+         $newwidth = floor( $width / $divisor );
+   }
+   // Create a new temporary image.
+   $tmpimg = imagecreatetruecolor( $newwidth, $newheight );
+    imagealphablending($tmpimg, false);
+    imagesavealpha($tmpimg, true);
+    // Copy and resize old image into new image.
+    imagecopyresampled($tmpimg, $img, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+    //compressing the file
+    switch($type){
+        case'image/png':
+                imagepng($tmpimg, $endfile, 0);
+                break;
+        case'image/jpeg':
+                imagejpeg($tmpimg, $endfile, 100);
+                break;
+        case'image/gif':
+                imagegif($tmpimg, $endfile, 0);
+                break;
+     }
+   // release the memory
+   imagedestroy($tmpimg);
+   imagedestroy($img);
+   return $endfile;
+} // function ResizeImageFile
+function ImageFixOrientation($image, $filename) {
+    $exif = exif_read_data($filename);
+    if (!empty($exif['Orientation'])) {
+        switch ($exif['Orientation']) {
+            case 3:
+                $image = imagerotate($image, 180, 0);
+                break;
+            case 6:
+                $img = imagerotate($image, -90, 0);
+                break;
+            case 8:
+                $image = imagerotate($image, 90, 0);
+                break;
+            default:
+                return $image;
+        }
+        return $img;
+    }
+    return $image;
+} //ImageFixOrientation
 ?>
 
 <?php include("_footer.php"); ?>

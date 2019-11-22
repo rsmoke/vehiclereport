@@ -393,13 +393,12 @@ function uploadImageFile($image, $vehiclenum, $uniquename) {
 		$todayDate = date('Ymd');
 		$temp = explode(".", $_FILES[$image]["name"]);
 		$newfilename = $todayDate . $vehiclenum . $uniquename . $image . round(microtime(true)) . '.' . end($temp);
-		$newsizefilename = "admin/uploads/" . $todayDate . $vehiclenum . $uniquename . $image . round(microtime(true)) . '.' . end($temp);
+		$newsizefilename = "admin/uploads/" . $newfilename;
    // resize image before uploading 
                 $sourcefile = $_FILES[$image]["tmp_name"];
                 $max_width = 800;
                 $max_height = 800;
                 $type = $_FILES[$image]['type'];
-                $endfile = "/Users/brita/Documents/images-cars/temp_file.jpg";
                 ResizeImageFile($sourcefile, $max_width, $max_height, $newsizefilename, $type);
 //		move_uploaded_file($_FILES[$image]["tmp_name"], "admin/uploads/" . $newfilename);
 // 		rename($endfile, "admin/uploads/" . $newfilename);
