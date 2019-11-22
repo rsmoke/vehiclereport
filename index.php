@@ -8,10 +8,15 @@ $purifier = new HTMLPurifier();
 
 <!DOCTYPE html>
 <html lang="en">
+<script type="text/javascript" src="js/dist/purify.min.js"></script>
 
 	<script>
-		function validate_uniqname(str) {
+		function validate_uniqname(str, name_id) {
+                        var str = DOMPurify.sanitize(str);
+                        var div_id = name_id + "_error";
+                    if (name_id == "driverfirstandlastname") {
 			document.getElementById('checkboxareyoudriver').checked = false;
+                    }
 		    if (str == "") {
 		        return;
 		    } else {
@@ -25,16 +30,16 @@ $purifier = new HTMLPurifier();
 		        xmlhttp.onreadystatechange = function() {
 		            if (this.readyState == 4 && this.status == 200) {
 		              if (this.responseText == "FALSE") {
-		              		document.getElementById("driverfirstandlastname").value = "";
-		                   if (!$('#uniqname_error').hasClass('uniqname_error_error')) {
-			                   $('#uniqname_error').addClass('uniqname_error_error');
-			                   $('#uniqname_error').css("font-weight", "bold");
-			                   $('#uniqname_error').prepend('<span style="color:red;margin-left:5px;">uniqname is not valid</span>');
+		              		document.getElementById(name_id).value = "";
+		                   if (!$('#'+div_id).hasClass('uniqname_error_error')) {
+			                   $('#'+div_id).addClass('uniqname_error_error');
+			                   $('#'+div_id).css("font-weight", "bold");
+			                   $('#'+div_id).prepend('<span style="color:red;margin-left:5px;">uniqname is not valid</span>');
 		              			}
 		           		} else {
-		                 $('#uniqname_error').removeClass('uniqname_error_error');
-		                 $('#uniqname_error').empty();
-		                 document.getElementById("driverfirstandlastname").value = this.responseText;
+		                 $('#'+div_id).removeClass('uniqname_error_error');
+		                 $('#'+div_id).empty();
+		                 document.getElementById(name_id).value = this.responseText;
 		              }
 		            }
 		        };
@@ -73,6 +78,8 @@ $purifier = new HTMLPurifier();
 		$firstandlastname = $purifier->purify($_POST['firstandlastname']);
 		$driveruniquename = $purifier->purify($_POST['driveruniquename']);
 		$driverfirstandlastname = $purifier->purify($_POST['driverfirstandlastname']);
+		$driveruniquename2 = $purifier->purify($_POST['driveruniquename2']);
+		$driverfirstandlastname2 = $purifier->purify($_POST['driverfirstandlastname2']);
 		$phone = $purifier->purify($_POST['phone']);
 		$vehiclenum = $purifier->purify($_POST['vehiclenum']);
 		$program = $purifier->purify($_POST['program']);
@@ -150,19 +157,18 @@ $purifier = new HTMLPurifier();
 			$dateEventStamp = date("Y-m-d H:i:s", $dateEvent);
 
 			if ( $thereIsADamageImage == false ) {
-				$sql = "INSERT INTO transportation_vf (uniquename, firstname, lastname, firstandlastname, driveruniquename, driverfirstandlastname, program, dateEvent, mileageDepart, fuelDepart, notes, phone, vehiclenum, imagefrontstartfilename, imagedriverstartfilename, imagepassengerstartfilename, imagebackstartfilename, imagedamagestartfilename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				$sql = "INSERT INTO transportation_vf (uniquename, firstname, lastname, firstandlastname, driveruniquename, driverfirstandlastname, driveruniquename2, driverfirstandlastname2, program, dateEvent, mileageDepart, fuelDepart, notes, phone, vehiclenum, imagefrontstartfilename, imagedriverstartfilename, imagepassengerstartfilename, imagebackstartfilename, imagedamagestartfilename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			} else {
-				$sql = "INSERT INTO transportation_vf (uniquename, firstname, lastname, firstandlastname, driveruniquename, driverfirstandlastname, program, dateEvent, mileageDepart, fuelDepart, notes, phone, vehiclenum, imagefrontstartfilename, imagedriverstartfilename, imagepassengerstartfilename, imagebackstartfilename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				$sql = "INSERT INTO transportation_vf (uniquename, firstname, lastname, firstandlastname, driveruniquename, driverfirstandlastname, driveruniquename2, driverfirstandlastname2, program, dateEvent, mileageDepart, fuelDepart, notes, phone, vehiclenum, imagefrontstartfilename, imagedriverstartfilename, imagepassengerstartfilename, imagebackstartfilename) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			}//else
 
 			$stmt = $db->stmt_init();
 			$stmt->prepare($sql);
 			if ( $thereIsADamageImage == false ) {
-				$stmt->bind_param('ssssssssssssssssss', $uniquename, $firstname, $lastname, $firstandlastname, $driveruniquename, $driverfirstandlastname, $program, $dateEventStamp, $mileageDepart, $fuelDepart, $notes, $phone, $vehiclenum, $imagefrontstartfilename, $imagedriverstartfilename, $imagepassengerstartfilename, $imagebackstartfilename, $imagedamagestartfilename);
+				$stmt->bind_param('ssssssssssssssssssss', $uniquename, $firstname, $lastname, $firstandlastname, $driveruniquename, $driverfirstandlastname, $driveruniquename2, $driverfirstandlastname2, $program, $dateEventStamp, $mileageDepart, $fuelDepart, $notes, $phone, $vehiclenum, $imagefrontstartfilename, $imagedriverstartfilename, $imagepassengerstartfilename, $imagebackstartfilename, $imagedamagestartfilename);
 			} else {
-				$stmt->bind_param('sssssssssssssssss', $uniquename, $firstname, $lastname, $firstandlastname, $driveruniquename, $driverfirstandlastname, $program, $dateEventStamp, $mileageDepart, $fuelDepart, $notes, $phone, $vehiclenum, $imagefrontstartfilename, $imagedriverstartfilename, $imagepassengerstartfilename, $imagebackstartfilename);
+				$stmt->bind_param('sssssssssssssssssss', $uniquename, $firstname, $lastname, $firstandlastname, $driveruniquename, $driverfirstandlastname, $driveruniquename2, $driverfirstandlastname2, $program, $dateEventStamp, $mileageDepart, $fuelDepart, $notes, $phone, $vehiclenum, $imagefrontstartfilename, $imagedriverstartfilename, $imagepassengerstartfilename, $imagebackstartfilename);
 			}//else
-
 			$stmt->execute();
 
 			echo $stmt->error;
@@ -205,15 +211,26 @@ $purifier = new HTMLPurifier();
 				<label class="form-check-label" for="checkboxareyoudriver">Check if you are the driver</label>
 			</div>
 
-			<div id='uniqname_error'></div>
+			<div id='driverfirstandlastname_error'></div>
 			<div class="form-group row">
 				<label for="driveruniquename">Driver's uniqname</label>
-				<input onchange="validate_uniqname(this.value)" type="text" class="form-control" id="driveruniquename" name="driveruniquename" value="<?php echo (isset($driveruniquename))? $driveruniquename : "";?>">
+				<input onchange="validate_uniqname(this.value, 'driverfirstandlastname')" type="text" class="form-control" id="driveruniquename" name="driveruniquename" value="<?php echo (isset($driveruniquename))? $driveruniquename : "";?>">
 			</div>
 
 			<div class="form-group row">
 				<label for="driverfirstandlastname">Driver's first and last name</label>
 				<input type="text" class="form-control" id="driverfirstandlastname" name="driverfirstandlastname" value="<?php echo (isset($driverfirstandlastname))? $driverfirstandlastname : "";?>">
+			</div>
+
+			<div id='driverfirstandlastname2_error'></div>
+			<div class="form-group row">
+				<label for="driveruniquename2">Second Driver's uniqname</label>
+				<input onchange="validate_uniqname(this.value, 'driverfirstandlastname2')" type="text" class="form-control" id="driveruniquename2" name="driveruniquename2" value="<?php echo (isset($driveruniquename2))? $driveruniquename2 : "";?>">
+			</div>
+
+			<div class="form-group row">
+				<label for="driverfirstandlastname2">Second Driver's first and last name</label>
+				<input type="text" class="form-control" id="driverfirstandlastname2" name="driverfirstandlastname2" value="<?php echo (isset($driverfirstandlastname2))? $driverfirstandlastname2 : "";?>">
 			</div>
 
 			<div class="form-group row">
@@ -546,7 +563,7 @@ $( function () {
   $("#checkboxareyoudriver").click(function() {
      // If change is confirmed this checks if the checkbox is checked
         if ($(this).prop("checked")) {
-        	$("#uniqname_error").html('');
+        	$("#driverfirstandlastname_error").html('');
 			$("#driveruniquename").val($("#uniquename").val());
 			$("#driverfirstandlastname").val($("#firstandlastname").val());
     }
