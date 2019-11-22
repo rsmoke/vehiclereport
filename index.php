@@ -14,7 +14,9 @@ $purifier = new HTMLPurifier();
 		function validate_uniqname(str, name_id) {
                         var str = DOMPurify.sanitize(str);
                         var div_id = name_id + "_error";
+                    if (name_id == "driverfirstandlastname") {
 			document.getElementById('checkboxareyoudriver').checked = false;
+                    }
 		    if (str == "") {
 		        return;
 		    } else {
