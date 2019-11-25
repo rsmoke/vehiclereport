@@ -36,6 +36,7 @@ $purifier = new HTMLPurifier();
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+	$phone = $purifier->purify($_POST['phone']);
 	$mileageReturn = $purifier->purify($_POST['mileageReturn']);
 	$fuelReturn = $purifier->purify($_POST['fuelReturn']);
 	$parking = $purifier->purify($_POST['parking']);
@@ -43,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$id = $purifier->purify($_POST['hiddenID']);
 	$mod_on = date('Y-m-d H:i:s');
 
-	$sql = "UPDATE transportation_vf SET mileageReturn='$mileageReturn', fuelReturn='$fuelReturn', parking='$parking', notes='$notes', mod_on='$mod_on'";
+	$sql = "UPDATE transportation_vf SET phone='$phone', mileageReturn='$mileageReturn', fuelReturn='$fuelReturn', parking='$parking', notes='$notes', mod_on='$mod_on'";
 
 	$sql = uploadAndProcessImageFile("imagefrontsite", $sql);
 	$sql = uploadAndProcessImageFile("imagedriversite", $sql);
@@ -116,6 +117,12 @@ else {
 				<?php echo  $value["dateEvent"]; ?>
 		   </div>
 		</div>
+
+		 <div class="form-group row">
+			<label for="phone">Phone</label>
+			<input type="text" class="form-control" id="phone" name="phone"  min="0" placeholder="xxx-xxx-xxxx" value="<?php echo $value["phone"]; ?>">
+
+		 </div>
 
 		 <div class="form-group row">
 			<label for="mileageDepart">Mileage (Return)</label>
