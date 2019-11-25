@@ -18,7 +18,12 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 	<?php
 		
 //		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
+           if ($isAdmin) {
+		$sql = "SELECT * FROM transportation_vf ORDER BY dateEvent DESC, IDvf DESC";	
+           }
+           else {
 		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' OR driveruniquename = '$uniquename' OR driveruniquename2 = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
+           }
 		
 		if(!$result = $db->query($sql))
 		{

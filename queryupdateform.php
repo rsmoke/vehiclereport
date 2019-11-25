@@ -6,7 +6,9 @@ $purifier = new HTMLPurifier();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-     <?php include("_head.php"); ?>
+     <?php include("_head.php"); 
+           $not_auth = "";
+      ?>
 
   <body role="document">
 
@@ -21,7 +23,12 @@ $purifier = new HTMLPurifier();
 	$id = trim($_GET['id']);
 
   if ($id != "") {
+   if ($isAdmin) {
     $sql = "SELECT * from transportation_vf WHERE IDvf = '$id'";
+  }
+  else {
+    $sql = "SELECT * from transportation_vf WHERE IDvf = '$id' AND (uniquename = '$uniquename' OR driveruniquename = '$uniquename' OR driveruniquename2 = '$uniquename')";
+  }
 ?>
 
 
@@ -80,7 +87,11 @@ else {
 	}//if
 
 	$queryResult = array();
-
+     if ($result->num_rows < 1) {
+      $not_auth = "Not Authorized";
+      echo "<h2>" . $not_auth . "</h2>";
+     }
+     else {   
 	while($row = $result->fetch_assoc())
 	{
 		$queryResult[] = $row;
@@ -322,7 +333,7 @@ else {
 
 	   <?php
 	}//foreach
-
+      } // empty  result
 	$result->free();
 
   ?>
