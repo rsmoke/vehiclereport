@@ -9,6 +9,43 @@ $purifier = new HTMLPurifier();
      <?php include("_head.php"); 
            $not_auth = "";
       ?>
+<script type="text/javascript" src="js/dist/purify.min.js"></script>
+        <script>
+                function validate_uniqname(str, name_id) {
+                        var str = DOMPurify.sanitize(str);
+                        var div_id = name_id + "_error";
+                    if (str == "") {
+                        return;
+                    } else {
+                        if (window.XMLHttpRequest) {
+                            // code for IE7+, Firefox, Chrome, Opera, Safari
+                            xmlhttp = new XMLHttpRequest();
+                        } else {
+                            // code for IE6, IE5
+                            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                        xmlhttp.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                              if (this.responseText == "FALSE") {
+                                        document.getElementById(name_id).value = "";
+                                   if (!$('#'+div_id).hasClass('uniqname_error_error')) {
+                                           $('#'+div_id).addClass('uniqname_error_error');
+                                           $('#'+div_id).css("font-weight", "bold");
+                                           $('#'+div_id).prepend('<span style="color:red;margin-left:5px;">uniqname is not valid</span>');
+                                                }
+                                        } else {
+                                 $('#'+div_id).removeClass('uniqname_error_error');
+                                 $('#'+div_id).empty();
+                                 document.getElementById(name_id).value = this.responseText;
+                              }
+                            }
+                        };
+                        xmlhttp.open("GET","ldapGleaner2.php?uniqname="+str,true);
+
+                        xmlhttp.send();
+                    }
+                }
+        </script>
 
   <body role="document">
 
@@ -37,6 +74,8 @@ $purifier = new HTMLPurifier();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$phone = $purifier->purify($_POST['phone']);
+	$driveruniquename2 = $purifier->purify($_POST['driveruniquename2']);
+	$driverfirstandlastname2 = $purifier->purify($_POST['driverfirstandlastname2']);
 	$mileageReturn = $purifier->purify($_POST['mileageReturn']);
 	$fuelReturn = $purifier->purify($_POST['fuelReturn']);
 	$parking = $purifier->purify($_POST['parking']);
@@ -44,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$id = $purifier->purify($_POST['hiddenID']);
 	$mod_on = date('Y-m-d H:i:s');
 
-	$sql = "UPDATE transportation_vf SET phone='$phone', mileageReturn='$mileageReturn', fuelReturn='$fuelReturn', parking='$parking', notes='$notes', mod_on='$mod_on'";
+	$sql = "UPDATE transportation_vf SET phone='$phone', driverfirstandlastname2='$driverfirstandlastname2', driveruniquename2='$driveruniquename2', mileageReturn='$mileageReturn', fuelReturn='$fuelReturn', parking='$parking', notes='$notes', mod_on='$mod_on'";
 
 	$sql = uploadAndProcessImageFile("imagefrontsite", $sql);
 	$sql = uploadAndProcessImageFile("imagedriversite", $sql);
@@ -112,6 +151,13 @@ else {
 		</div>
 
 		<div class="form-group row">
+			<label class="col-sm-2">Driver</label>
+			<div class="col-sm-4">
+				<?php echo $value["driverfirstandlastname"]." (". $value["driveruniquename"]. ")"; ?>
+		   </div>
+		</div>
+
+		<div class="form-group row">
 			<label class="col-sm-2">Date</label>
 			<div class="col-sm-4">
 				<?php echo  $value["dateEvent"]; ?>
@@ -121,6 +167,19 @@ else {
 		 <div class="form-group row">
 			<label for="phone">Phone</label>
 			<input type="text" class="form-control" id="phone" name="phone"  min="0" placeholder="xxx-xxx-xxxx" value="<?php echo $value["phone"]; ?>">
+
+		 </div>
+
+                 <div id='driverfirstandlastname2_error'></div>
+		 <div class="form-group row">
+			<label for="phone">Second Driver's uniqname</label>
+			<input onchange="validate_uniqname(this.value, 'driverfirstandlastname2')" type="text" class="form-control" id="driveruniquename2" name="driveruniquename2"  min="0" value="<?php echo $value["driveruniquename2"]; ?>">
+
+		 </div>
+
+		 <div class="form-group row">
+			<label for="phone">Second Driver's Name</label>
+			<input type="text" class="form-control" id="driverfirstandlastname2" name="driverfirstandlastname2"  min="0" value="<?php echo $value["driverfirstandlastname2"]; ?>">
 
 		 </div>
 
