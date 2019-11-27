@@ -214,12 +214,15 @@ else {
 				<div class="input-group mt-3">
 					<?php
 						if ( $value["imagefrontsitefilename"] == "" ) {
+
 							echo '<div class="custom-file">';
 							echo '<input type="file" id="imagefrontsite" name="imagefrontsite" class="custom-file-input" >';
 							echo '<label for="imagefrontsite" class="custom-file-label">Front (site)</label>';
 							echo '</div>';
 						} else {
-							echo 'Front (site)  [<span class="text-success">Image uploaded</span>]';
+							echo 'Front (site) ';
+                                                        echo '<a href="admin/uploads/'. $value["imagefrontsitefilename"] .'" target="_blank">';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagefrontsitefilename"] .'" width="100" height ="100"></a>';
 						}
 					?>
 				</div>
@@ -235,7 +238,9 @@ else {
 							echo '<label for="imagedriversite" class="custom-file-label">Driver (site)</label>';
 							echo '</div>';
 						} else {
-							echo 'Driver (site)  [<span class="text-success">Image uploaded</span>]';
+							echo 'Driver (site) ';
+                                                        echo '<a href="admin/uploads/'. $value["imagedriversitefilename"] .'" target="_blank">';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagedriversitefilename"] .'" width="100" height ="100"></a>';
 						}
 					?>
 				</div>
@@ -251,7 +256,9 @@ else {
 							echo '<label for="imagepassengersite" class="custom-file-label">Passenger (site)</label>';
 							echo '</div>';
 						} else {
-							echo 'Passenger (site)  [<span class="text-success">Image uploaded</span>]';
+							echo 'Passenger (site) ';
+                                                        echo '<a href="admin/uploads/'. $value["imagepassengersitefilename"] .'" target="_blank">';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagepassengersitefilename"] .'" width="100" height ="100"></a>';
 						}
 					?>
 				</div>
@@ -267,7 +274,9 @@ else {
 							echo '<label for="imagebacksite" class="custom-file-label">Back (site)</label>';
 							echo '</div>';
 						} else {
-							echo 'Back (site)  [<span class="text-success">Image uploaded</span>]';
+							echo 'Back (site) ';
+                                                        echo '<a href="admin/uploads/'. $value["imagebacksitefilename"] .'" target="_blank">';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagebacksitefilename"] .'" width="100" height ="100"></a>';
 						}
 					?>
 				</div>
@@ -283,7 +292,9 @@ else {
 							echo '<label for="imagedamagesite" class="custom-file-label">Damage (site)</label>';
 							echo '</div>';
 						} else {
-							echo 'Damage (site)  [<span class="text-success">Image uploaded</span>]';
+							echo 'Damage (site) ';
+                                                        echo '<a href="admin/uploads/'. $value["imagedamagesitefilename"] .'" target="_blank">';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagedamagesitefilename"] .'" width="100" height ="100"></a>';
 						}
 					?>
 				</div>
@@ -302,7 +313,9 @@ else {
 							echo '<label for="imagefrontend" class="custom-file-label">Front (returned)</label>';
 							echo '</div>';
 						} else {
-							echo 'Front (returned)  [<span class="text-success">Image uploaded</span>]';
+							echo 'Front (returned) ';
+                                                        echo '<a href="admin/uploads/'. $value["imagefrontendfilename"] .'" target="_blank">';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagefrontendfilename"] .'" width="100" height ="100"></a>';
 						}
 					?>
 				</div>
@@ -318,7 +331,9 @@ else {
 							echo '<label for="imagedriverend" class="custom-file-label">Driver (returned)</label>';
 							echo '</div>';
 						} else {
-							echo 'Driver (returned)  [<span class="text-success">Image uploaded</span>]';
+							echo 'Driver (returned) ';
+                                                        echo '<a href="admin/uploads/'. $value["imagedriverendfilename"] .'" target="_blank">';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagedriverendfilename"] .'" width="100" height ="100"></a>';
 						}
 					?>
 				</div>
@@ -334,7 +349,9 @@ else {
 							echo '<label for="imagepassengerend" class="custom-file-label">Passenger (returned)</label>';
 							echo '</div>';
 						} else {
-							echo 'Passenger (returned)  [<span class="text-success">Image uploaded</span>]';
+							echo 'Passenger (returned) ';
+                                                        echo '<a href="admin/uploads/'. $value["imagepassengerendfilename"] .'" target="_blank">';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagepassengerendfilename"] .'" width="100" height ="100"></a>';
 						}
 					?>
 				</div>
@@ -350,7 +367,9 @@ else {
 							echo '<label for="imagebackend" class="custom-file-label">Back (returned)</label>';
 							echo '</div>';
 						} else {
-							echo 'Back (returned)  [<span class="text-success">Image uploaded</span>]';
+							echo 'Back (returned) ';
+                                                        echo '<a href="admin/uploads/'. $value["imagebackendfilename"] .'" target="_blank">';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagebackendfilename"] .'" width="100" height ="100"></a>';
 						}
 					?>
 				</div>
@@ -366,7 +385,9 @@ else {
 							echo '<label for="imagedamageend" class="custom-file-label">Damage (returned)</label>';
 							echo '</div>';
 						} else {
-							echo 'Damage (returned)  [<span class="text-success">Image uploaded</span>]';
+							echo 'Damage (returned) ';
+                                                        echo '<a href="admin/uploads/'. $value["imagedamageendfilename"] .'" target="_blank">';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagedamageendfilename"] .'" width="100" height ="100"></a>';
 						}
 					?>
 				</div>
