@@ -57,7 +57,14 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 		?>
 			<tr>
 			
-				<td><a class="updateForm" href='queryupdateform.php?id=<?php echo $value["IDvf"]; ?>'>Update</a> </td>
+				<td><a class="updateForm" href='queryupdateform.php?id=<?php echo $value["IDvf"]; ?>'>Update</a><br> 
+<?php
+if ($isAdmin) {
+?>
+				<a class="deleteForm" href='querydeleteform.php?id=<?php echo $value["IDvf"]; ?>' onclick="return confirm('Are you sure you want to delete this item?');">Delete</a> </td>
+<?php
+}
+?>
 				
 				<td> <?php echo $value["vehiclenum"]; ?> </td>
 				
