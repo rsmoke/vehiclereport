@@ -80,10 +80,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$fuelReturn = $purifier->purify($_POST['fuelReturn']);
 	$parking = $purifier->purify($_POST['parking']);
 	$notes = $purifier->purify($_POST['notes']);
+	$adminnotes = $purifier->purify($_POST['adminnotes']);
 	$id = $purifier->purify($_POST['hiddenID']);
 	$mod_on = date('Y-m-d H:i:s');
 
-	$sql = "UPDATE transportation_vf SET phone='$phone', driverfirstandlastname2='$driverfirstandlastname2', driveruniquename2='$driveruniquename2', mileageReturn='$mileageReturn', fuelReturn='$fuelReturn', parking='$parking', notes='$notes', mod_on='$mod_on'";
+	$sql = "UPDATE transportation_vf SET phone='$phone', driverfirstandlastname2='$driverfirstandlastname2', driveruniquename2='$driveruniquename2', mileageReturn='$mileageReturn', fuelReturn='$fuelReturn', parking='$parking', notes='$notes', adminnotes='$adminnotes', mod_on='$mod_on'";
 
 	$sql = uploadAndProcessImageFile("imagefrontsite", $sql);
 	$sql = uploadAndProcessImageFile("imagedriversite", $sql);
@@ -209,9 +210,42 @@ else {
 
 		<br><br>
 		<h5 class="bg-light">Please upload car images below.</h5>
+<!--
 		<div class="form-group row justify-content-center">
 			<div class="col-10">
 				<div class="input-group mt-3">
+-->
+           <table class="table table-striped table-bordered">
+                        <tr>
+                                <td>Parking Garage (start)</td>
+                        <td>
+
+                                <?php if  ( $value["imagefrontstartfilename"] != "" ) { ?>
+                                <a href="admin/uploads\<?php echo $value["imagefrontstartfilename"] ?>" target="_blank">
+                                <img src="admin/processimage.php?image=<?php echo $value["imagefrontstartfilename"] ?>" width="100" height ="100"></a><?php }//if ?>
+
+
+                                <?php if  ( $value["imagedriverstartfilename"] != "" ) { ?>
+                                <a href="admin/uploads\<?php echo $value["imagedriverstartfilename"] ?>" target="_blank">
+                                <img src="admin/processimage.php?image=<?php echo $value["imagedriverstartfilename"] ?>" width="100" height ="100"></a><?php }//if ?>
+
+                                <?php if  ( $value["imagepassengerstartfilename"] != "" ) { ?>
+<a href="admin/uploads\<?php echo $value["imagepassengerstartfilename"] ?>" target="_blank">
+                                <img src="admin/processimage.php?image=<?php echo $value["imagepassengerstartfilename"] ?>" width="100" height ="100"></a><?php }//if ?>
+
+                                <?php if  ( $value["imagebackstartfilename"] != "" ) { ?>
+                                <a href="admin/uploads\<?php echo $value["imagebackstartfilename"] ?>" target="_blank">
+                                <img src="admin/processimage.php?image=<?php echo $value["imagebackstartfilename"] ?>" width="100" height ="100"></a><?php }//if ?>
+
+                                <?php if  ( $value["imagedamagestartfilename"] != "" ) { ?>
+                                <a href="admin/uploads\<?php echo $value["imagedamagestartfilename"] ?>" target="_blank">
+                                <img src="admin/processimage.php?image=<?php echo $value["imagedamagestartfilename"] ?>" width="100" height ="100"></a><?php }//if ?>
+
+                </td>
+</tr>
+<tr>
+                                <td>At Site</td>
+                                <td>
 					<?php
 						if ( $value["imagefrontsitefilename"] == "" ) {
 
@@ -220,17 +254,21 @@ else {
 							echo '<label for="imagefrontsite" class="custom-file-label">Front (site)</label>';
 							echo '</div>';
 						} else {
-							echo 'Front (site) ';
+echo '<div style="float:left;">';
+							echo 'Front (site)<br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagefrontsitefilename"] .'" target="_blank">';
-                                                        echo '<img src="admin/processimage.php?image=' . $value["imagefrontsitefilename"] .'" width="100" height ="100"></a>';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagefrontsitefilename"] .'" style="width:100px;height:100px;hspace:10;"></a>';
+echo "</div>";
 						}
 					?>
+<!--
 				</div>
 			</div>
 		</div>
 		<div class="form-group row justify-content-center">
 			<div class="col-10">
 				<div class="input-group mt-3">
+-->
 				<?php
 						if ( $value["imagedriversitefilename"] == "" ) {
 							echo '<div class="custom-file">';
@@ -238,35 +276,43 @@ else {
 							echo '<label for="imagedriversite" class="custom-file-label">Driver (site)</label>';
 							echo '</div>';
 						} else {
-							echo 'Driver (site) ';
+echo '<div style="float:left;">';
+							echo 'Driver (site)<br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagedriversitefilename"] .'" target="_blank">';
-                                                        echo '<img src="admin/processimage.php?image=' . $value["imagedriversitefilename"] .'" width="100" height ="100"></a>';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagedriversitefilename"] .'" width="100" height ="100" hspace="5"></a>';
+echo "</div>";
 						}
 					?>
+<!--
 				</div>
 			</div>
 		</div>
 		<div class="form-group row justify-content-center">
 			<div class="col-10">
 				<div class="input-group mt-3">
+-->
 					<?php
 						if ( $value["imagepassengersitefilename"] == "" ) {
 							echo '<div class="custom-file">';
 							echo '<input type="file" id="imagepassengersite" name="imagepassengersite" class="custom-file-input" >';
 							echo '<label for="imagepassengersite" class="custom-file-label">Passenger (site)</label>';
-							echo '</div>';
+         						echo '</div>';
 						} else {
-							echo 'Passenger (site) ';
+echo '<div style="float:left;">';
+							echo 'Passenger (site)<br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagepassengersitefilename"] .'" target="_blank">';
-                                                        echo '<img src="admin/processimage.php?image=' . $value["imagepassengersitefilename"] .'" width="100" height ="100"></a>';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagepassengersitefilename"] .'" width="100" height ="100" hspace="5"></a>';
+echo "</div>";
 						}
 					?>
+<!--
 				</div>
 			</div>
 		</div>
 		<div class="form-group row justify-content-center">
 			<div class="col-10">
 				<div class="input-group mt-3">
+-->
 					<?php
 						if ( $value["imagebacksitefilename"] == "" ) {
 							echo '<div class="custom-file">';
@@ -274,17 +320,21 @@ else {
 							echo '<label for="imagebacksite" class="custom-file-label">Back (site)</label>';
 							echo '</div>';
 						} else {
-							echo 'Back (site) ';
+echo '<div style="float:left;">';
+							echo 'Back (site)<br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagebacksitefilename"] .'" target="_blank">';
-                                                        echo '<img src="admin/processimage.php?image=' . $value["imagebacksitefilename"] .'" width="100" height ="100"></a>';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagebacksitefilename"] .'" width="100" height ="100" hspace="5"></a>';
+echo "</div>";
 						}
 					?>
+<!--
 				</div>
 			</div>
 		</div>
 		<div class="form-group row justify-content-center">
 			<div class="col-10">
 				<div class="input-group mt-3">
+-->
 					<?php
 						if ( $value["imagedamagesitefilename"] == "" ) {
 							echo '<div class="custom-file">';
@@ -292,38 +342,53 @@ else {
 							echo '<label for="imagedamagesite" class="custom-file-label">Damage (site)</label>';
 							echo '</div>';
 						} else {
-							echo 'Damage (site) ';
+echo '<div style="float:left;">';
+							echo 'Damage (site)<br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagedamagesitefilename"] .'" target="_blank">';
-                                                        echo '<img src="admin/processimage.php?image=' . $value["imagedamagesitefilename"] .'" width="100" height ="100"></a>';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagedamagesitefilename"] .'" width="100" height ="100" hspace="5"></a>';
+echo "</div>";
 						}
 					?>
+<!--
 				</div>
 			</div>
 		</div>
+-->
 
+                                </td>
+                        </tr>
 		<hr>
-
+<!--
 		<div class="form-group row justify-content-center">
 			<div class="col-10">
 				<div class="input-group mt-3">
+-->
+                        <tr>
+                                <td>Parking Garage (return)</td>
+
+<td>
 					<?php
 						if ( $value["imagefrontendfilename"] == "" ) {
 							echo '<div class="custom-file">';
 							echo '<input type="file" id="imagefrontend" name="imagefrontend" class="custom-file-input" >';
-							echo '<label for="imagefrontend" class="custom-file-label">Front (returned)</label>';
+							echo '<label for="imagefrontend" class="custom-file-label">Front(returned)</label>';
 							echo '</div>';
 						} else {
-							echo 'Front (returned) ';
+echo '<div style="float:left;">';
+							echo 'Front <br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagefrontendfilename"] .'" target="_blank">';
-                                                        echo '<img src="admin/processimage.php?image=' . $value["imagefrontendfilename"] .'" width="100" height ="100"></a>';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagefrontendfilename"] .'" width="100" height ="100" hspace="5"></a>';
+echo "</div>";
 						}
 					?>
+<!--
 				</div>
 			</div>
 		</div>
 		<div class="form-group row justify-content-center">
 			<div class="col-10">
 				<div class="input-group mt-3">
+-->
 					<?php
 						if ( $value["imagedriverendfilename"] == "" ) {
 							echo '<div class="custom-file">';
@@ -331,17 +396,21 @@ else {
 							echo '<label for="imagedriverend" class="custom-file-label">Driver (returned)</label>';
 							echo '</div>';
 						} else {
-							echo 'Driver (returned) ';
+echo '<div style="float:left;">';
+							echo 'Driver <br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagedriverendfilename"] .'" target="_blank">';
-                                                        echo '<img src="admin/processimage.php?image=' . $value["imagedriverendfilename"] .'" width="100" height ="100"></a>';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagedriverendfilename"] .'" width="100" height ="100" hspace="5"></a>';
+echo "</div>";
 						}
 					?>
+<!--
 				</div>
 			</div>
 		</div>
 		<div class="form-group row justify-content-center">
 			<div class="col-10">
 				<div class="input-group mt-3">
+-->
 					<?php
 						if ( $value["imagepassengerendfilename"] == "" ) {
 							echo '<div class="custom-file">';
@@ -349,17 +418,21 @@ else {
 							echo '<label for="imagepassengerend" class="custom-file-label">Passenger (returned)</label>';
 							echo '</div>';
 						} else {
-							echo 'Passenger (returned) ';
+echo '<div style="float:left;">';
+							echo 'Passenger <br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagepassengerendfilename"] .'" target="_blank">';
-                                                        echo '<img src="admin/processimage.php?image=' . $value["imagepassengerendfilename"] .'" width="100" height ="100"></a>';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagepassengerendfilename"] .'" width="100" height ="100" hspace="5"></a>';
+echo "</div>";
 						}
 					?>
+<!--
 				</div>
 			</div>
 		</div>
 		<div class="form-group row justify-content-center">
 			<div class="col-10">
 				<div class="input-group mt-3">
+-->
 					<?php
 						if ( $value["imagebackendfilename"] == "" ) {
 							echo '<div class="custom-file">';
@@ -367,17 +440,22 @@ else {
 							echo '<label for="imagebackend" class="custom-file-label">Back (returned)</label>';
 							echo '</div>';
 						} else {
-							echo 'Back (returned) ';
+echo '<div style="float:left;">';
+							echo 'Back <br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagebackendfilename"] .'" target="_blank">';
-                                                        echo '<img src="admin/processimage.php?image=' . $value["imagebackendfilename"] .'" width="100" height ="100"></a>';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagebackendfilename"] .'" width="100" height ="100" hspace="5"></a>';
+echo "</div>";
 						}
 					?>
+
+<!--
 				</div>
 			</div>
 		</div>
 		<div class="form-group row justify-content-center">
 			<div class="col-10">
 				<div class="input-group mt-3">
+-->
 					<?php
 						if ( $value["imagedamageendfilename"] == "" ) {
 							echo '<div class="custom-file">';
@@ -385,14 +463,21 @@ else {
 							echo '<label for="imagedamageend" class="custom-file-label">Damage (returned)</label>';
 							echo '</div>';
 						} else {
-							echo 'Damage (returned) ';
+echo '<div style="float:left;">';
+							echo 'Damage <br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagedamageendfilename"] .'" target="_blank">';
-                                                        echo '<img src="admin/processimage.php?image=' . $value["imagedamageendfilename"] .'" width="100" height ="100"></a>';
+                                                        echo '<img src="admin/processimage.php?image=' . $value["imagedamageendfilename"] .'" width="100" height ="100" hspace="5"></a>';
+echo "</div>";
 						}
 					?>
+<!--
 				</div>
 			</div>
 		</div>
+-->
+                                </td>
+                        </tr>
+</table>
 
 		<hr>
 
@@ -401,7 +486,16 @@ else {
 				<label for="notes">Notes</label>
 				<textarea class="form-control" rows="4" id="notes" name="notes" placeholder="Notes"><?php echo $value["notes"]; ?></textarea>
 			</div>
-
+<?php
+if ($isAdmin) {
+?>
+			<div class="form-group row">
+				<label for="adminnotes">Admin Notes</label>
+				<textarea class="form-control" rows="4" id="adminnotes" name="adminnotes" placeholder="Admin Notes"><?php echo $value["adminnotes"]; ?></textarea>
+			</div>
+<?php
+}
+?>
 			<div class="form-group row justify-content-center">
 				<div class="col-7">
 					<div class="alert alert-danger text-center" role="alert" ><h4>If you see any new damage to the vehicle, please notify us at <a href="mailto:<?php echo "$addressEmail";?>"><?php echo "$addressEmail";?></a>.</h4></div>
