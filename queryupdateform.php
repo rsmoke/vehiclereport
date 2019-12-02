@@ -183,12 +183,26 @@ else {
 			<input type="text" class="form-control" id="driverfirstandlastname2" name="driverfirstandlastname2"  min="0" value="<?php echo $value["driverfirstandlastname2"]; ?>">
 
 		 </div>
+		<div class="form-group row">
+			<label class="col-sm-2">Mileage (Depart)</label>
+			<div class="col-sm-4">
+				<?php echo $value["mileageDepart"]; ?>
+		   </div>
+		</div>
+
 
 		 <div class="form-group row">
 			<label for="mileageDepart">Mileage (Return)</label>
 			<input type="text" class="form-control" id="mileageReturn" name="mileageReturn"  min="0" placeholder="000.00" value="<?php echo $value["mileageReturn"]; ?>" pattern="\d*\.?\d*" title="Enter a decimal number: 000.00">
 
 		 </div>
+		<div class="form-group row">
+			<label class="col-sm-2">Fuel (Depart)</label>
+			<div class="col-sm-4">
+				<?php echo $value["fuelDepart"]."%"; ?>
+		   </div>
+		</div>
+
 
 		 <div class="form-group row">
 		  <label for="fuel-gauge-controlReturn">Fuel (Return)</label>
