@@ -255,7 +255,7 @@ $purifier = new HTMLPurifier();
 
 			<div class="form-group row">
 				<label for="mileageDepart">Mileage (Depart)</label>
-				<input type="text" class="form-control" id="mileageDepart" name="mileageDepart"  min="0" placeholder="Mileage (Depart)" value="<?php echo (isset($mileageDepart))? $mileageDepart : ""; ?>">
+				<input type="text" class="form-control" id="mileageDepart" name="mileageDepart"  min="0" placeholder="000.00" value="<?php echo (isset($mileageDepart))? $mileageDepart : ""; ?>" pattern="\d*\.?\d*" title="Enter a decimal number: 000.00">
 			</div>
 
 			<!--fuel depart-->

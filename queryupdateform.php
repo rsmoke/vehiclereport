@@ -186,7 +186,7 @@ else {
 
 		 <div class="form-group row">
 			<label for="mileageDepart">Mileage (Return)</label>
-			<input type="text" class="form-control" id="mileageReturn" name="mileageReturn"  min="0" placeholder="Mileage (Return)" value="<?php echo $value["mileageReturn"]; ?>">
+			<input type="text" class="form-control" id="mileageReturn" name="mileageReturn"  min="0" placeholder="000.00" value="<?php echo $value["mileageReturn"]; ?>" pattern="\d*\.?\d*" title="Enter a decimal number: 000.00">
 
 		 </div>
 
