@@ -10,7 +10,7 @@
         <?php 
             if ($isAdmin) {
               $html = '';
-              $html .= '<a class="nav-item nav-link" href='. URL . 'admin/updatevfadmin.php>Admin Review/Edit Forms</span></a>';
+         //     $html .= '<a class="nav-item nav-link" href='. URL . 'admin/updatevfadmin.php>Admin Review/Edit Forms</span></a>';
               $html .= '<a class="nav-item nav-link" href='. URL . 'admin/adminreport.php>Admin Report</a>';
               $html .= '<a class="nav-item nav-link btn btn-sm btn-outline-secondary" href='. URL . 'admin/admin_edit.php>Edit App Admins</a>';
               echo $html;
