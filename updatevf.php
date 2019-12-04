@@ -17,7 +17,13 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 	<div id="tabledata">
 	<?php
 		
-		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
+//		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
+           if ($isAdmin) {
+		$sql = "SELECT * FROM transportation_vf ORDER BY dateEvent DESC, IDvf DESC";	
+           }
+           else {
+		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' OR driveruniquename = '$uniquename' OR driveruniquename2 = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
+           }
 		
 		if(!$result = $db->query($sql))
 		{
@@ -51,7 +57,14 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 		?>
 			<tr>
 			
-				<td><a class="updateForm" href='queryupdateform.php?id=<?php echo $value["IDvf"]; ?>'>Update</a> </td>
+				<td><a class="updateForm" href='queryupdateform.php?id=<?php echo $value["IDvf"]; ?>'>Update</a><br> 
+<?php
+if ($isAdmin) {
+?>
+				<a class="deleteForm" href='querydeleteform.php?id=<?php echo $value["IDvf"]; ?>' onclick="return confirm('Are you sure you want to delete this item?');">Delete</a> </td>
+<?php
+}
+?>
 				
 				<td> <?php echo $value["vehiclenum"]; ?> </td>
 				
