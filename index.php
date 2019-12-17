@@ -235,7 +235,7 @@ $purifier = new HTMLPurifier();
 
 			<div class="form-group row">
 				<label for="lastname" >Phone</label>
-				<input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number" value="<?php (isset($phone))? $phone : "";?>">
+				<input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number" value="<?php echo (isset($phone))? $phone : "";?>">
 			</div>
 
 			<div class="form-group row">
@@ -250,7 +250,7 @@ $purifier = new HTMLPurifier();
 
 			<div class="form-group row">
 				<label>Course Number / Program</label>
-				<textarea class="form-control" rows="4" id="program" name="program" placeholder="Course Number / Program"></textarea>
+				<textarea class="form-control" rows="4" id="program" name="program" placeholder="Course Number / Program"><?php echo (isset($program))? $program : ""; ?></textarea>
 			</div>
 
 			<div class="form-group row">
@@ -326,7 +326,7 @@ $purifier = new HTMLPurifier();
 
 			<div class="form-group row">
 				<label for="notes" >Notes (optional)</label>
-				<textarea class="form-control" rows="4" id="notes" name="notes" placeholder="Notes"></textarea>
+				<textarea class="form-control" rows="4" id="notes" name="notes" placeholder="Notes"><?php echo (isset($notes))? $notes : ""; ?></textarea>
 			</div>
 
 			<div class="form-group row justify-content-center">
