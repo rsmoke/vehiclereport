@@ -11,6 +11,11 @@ $purifier = new HTMLPurifier();
       ?>
 <script type="text/javascript" src="js/dist/purify.min.js"></script>
         <script>
+              function parking_message(div_id) {
+                 $('#'+div_id).prepend('<span style="color:red;margin-left:5px;">Do not forget to add parking notes</span>');
+              }
+        </script>
+        <script>
                 function validate_uniqname(str, name_id) {
                         var str = DOMPurify.sanitize(str);
                         var div_id = name_id + "_error";
@@ -193,7 +198,7 @@ else {
 
 		 <div class="form-group row">
 			<label for="mileageDepart">Mileage (Return)</label>
-			<input type="text" class="form-control" id="mileageReturn" name="mileageReturn"  min="0" placeholder="000.00" value="<?php echo $value["mileageReturn"]; ?>" pattern="\d*\.?\d*" title="Enter a decimal number: 000.00">
+			<input onchange="parking_message('parking_message')" type="text" class="form-control" id="mileageReturn" name="mileageReturn"  min="0" placeholder="000.00" value="<?php echo $value["mileageReturn"]; ?>" pattern="\d*\.?\d*" title="Enter a decimal number: 000.00">
 
 		 </div>
 		<div class="form-group row">
@@ -217,6 +222,7 @@ else {
 		<div id="fuelIsTooLow" class="alert alert-danger" role="alert"><h4>You need to go to Transportation Services (1213 Kipke Dr, Ann Arbor, MI 48109) to refuel this vehicle immediately.</h4></div>
 
 
+<div id='parking_message'></div>
 		 <div class="form-group row">
 			<label for="mileageDepart">Parking structure & Floor Number</label>
 			<textarea class="form-control" rows="3" id="parking" name="parking" placeholder="Parking Location"><?php echo $value["parking"]; ?></textarea>
