@@ -62,6 +62,7 @@ $purifier = new HTMLPurifier();
 
 
 <?php
+/*
 	$id = trim($_GET['id']);
 
   if ($id != "") {
@@ -71,11 +72,14 @@ $purifier = new HTMLPurifier();
   else {
     $sql = "SELECT * from transportation_vf WHERE IDvf = '$id' AND (uniquename = '$uniquename' OR driveruniquename = '$uniquename' OR driveruniquename2 = '$uniquename')";
   }
+*/
 ?>
 
 
 
 <?php
+$errors = ""; //Clean out errors
+$check_parking = "no";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$phone = $purifier->purify($_POST['phone']);
@@ -104,13 +108,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$sql = uploadAndProcessImageFile("imagedamageend", $sql);
 
 	$sql .= " WHERE IDvf = '$id'";
-
+        if ($check_parking == "yes") {
+          if ($parking == "") {
+              $errors .= "Parking<br>";
+          } 
+          if ($fuelReturn == "") {
+              $errors .= "Fuel (Return)<br>";
+          } 
+        } 
+        if ($errors != "") {
+                $errors = "<div class=\"alert alert-danger\" role=\"alert\"><h4>The following fields are required: </h4>".$errors."</div>";
+                        echo $errors;
+        }//if
+        else {
+           $check_parking = "no";
+        }
+} // POST
+     if ($_SERVER['REQUEST_METHOD'] == 'POST' && $check_parking == "no") {
+//echo $sql;
 	//Uncomment for troubleshooting
 	if ($db->query($sql) === true) {
-		//echo "Record updated successfully";
+	//	echo "Record updated successfully";
 	}//if
 	else {
-		//die('There was an error running the query [' . $mysqli->error . ']');
+		die('There was an error running the query ');
 	}//else
 
 	$db->close();
@@ -122,6 +143,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	You may close this window or go back to the <a href=\"updatevf.php\">update form page</a>.</div>";
 }//if
 else {
+        $id = trim($_GET['id']);
+
+  if ($id != "") {
+   if ($isAdmin) {
+    $sql = "SELECT * from transportation_vf WHERE IDvf = '$id'";
+  }
+  else {
+    $sql = "SELECT * from transportation_vf WHERE IDvf = '$id' AND (uniquename = '$uniquename' OR driveruniquename = '$uniquename' OR driveruniquename2 = '$uniquename')";
+  }
+
 	?>
 
   <form method="post" id="formEdit" name="formEdit" enctype="multipart/form-data">
@@ -544,16 +575,14 @@ if ($isAdmin) {
 }//else for POST
 
   }
-?>
 
 
 
-<?php
 function uploadAndProcessImageFile($image, $sql) {
 		global $uniquename;
-	  $purifier = new HTMLPurifier();
+		global $check_parking;
+         	$purifier = new HTMLPurifier();
 		$vehiclenum = $purifier->purify($_POST['vehiclenum']);
-
 		$file_name = $_FILES[$image]['name'];
 		$file_size = $_FILES[$image]['size'];
 		$file_tmp = $_FILES[$image]['tmp_name'];
@@ -584,21 +613,27 @@ function uploadAndProcessImageFile($image, $sql) {
 		}//if
 		if ( $file_name != "" && $image == "imagedamagesite") {
 			$sql .= ", imagedamagesitefilename='$newfilename' ";
+                        $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagefrontend") {
 			$sql .= ", imagefrontendfilename='$newfilename' ";
+                        $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagedriverend") {
 			$sql .= ", imagedriverendfilename='$newfilename' ";
+                        $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagepassengerend") {
 			$sql .= ", imagepassengerendfilename='$newfilename' ";
+                        $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagebackend") {
 			$sql .= ", imagebackendfilename='$newfilename' ";
+                        $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagedamageend") {
 			$sql .= ", imagedamageendfilename='$newfilename' ";
+                        $check_parking = "yes";
 		}//if
 
 	return $sql;
