@@ -89,11 +89,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$fuelReturn = $purifier->purify($_POST['fuelReturn']);
 	$parking = $purifier->purify($_POST['parking']);
 	$notes = $purifier->purify($_POST['notes']);
-	$adminnotes = $purifier->purify($_POST['adminnotes']);
+        if (isset($_POST['adminnotes'])) {
+	     $adminnotes = $purifier->purify($_POST['adminnotes']);
+        }
+        else {
+             $adminnotes = "";
+        }
 	$id = $purifier->purify($_POST['hiddenID']);
 	$mod_on = date('Y-m-d H:i:s');
 
-	$sql = "UPDATE transportation_vf SET phone='$phone', driverfirstandlastname2='$driverfirstandlastname2', driveruniquename2='$driveruniquename2', mileageReturn='$mileageReturn', fuelReturn='$fuelReturn', parking='$parking', notes='$notes', adminnotes='$adminnotes', mod_on='$mod_on'";
+//	$sql = "UPDATE transportation_vf SET phone='$phone', driverfirstandlastname2='$driverfirstandlastname2', driveruniquename2='$driveruniquename2', mileageReturn='$mileageReturn', fuelReturn='$fuelReturn', parking='$parking', notes='$notes', adminnotes='$adminnotes', mod_on='$mod_on'";
+	$sql = "UPDATE transportation_vf SET phone=?, driverfirstandlastname2=?, driveruniquename2=?, mileageReturn=?, fuelReturn=?, parking=?, notes=?, adminnotes=?, mod_on=?";
+
+        $bind_type = "sssssssss";
+        $bind_var = [$phone, $driverfirstandlastname2, $driveruniquename2, $mileageReturn, $fuelReturn, $parking, $notes, $adminnotes, $mod_on];
 
 	$sql = uploadAndProcessImageFile("imagefrontsite", $sql);
 	$sql = uploadAndProcessImageFile("imagedriversite", $sql);
@@ -107,7 +116,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$sql = uploadAndProcessImageFile("imagebackend", $sql);
 	$sql = uploadAndProcessImageFile("imagedamageend", $sql);
 
-	$sql .= " WHERE IDvf = '$id'";
+//	$sql .= " WHERE IDvf = '$id'";
+	$sql .= " WHERE IDvf = ?";
+        $bind_type .= "d";
+        $bind_var[] = $id;
         if ($check_parking == "yes") {
           if ($parking == "") {
               $errors .= "Parking<br>";
@@ -127,7 +139,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
      if ($_SERVER['REQUEST_METHOD'] == 'POST' && $check_parking == "no") {
 //echo $sql;
 	//Uncomment for troubleshooting
-	if ($db->query($sql) === true) {
+        $stmt = $db->stmt_init();
+        $stmt->prepare($sql);
+//        $stmt->bind_param('sssssssssssssssssss', $uniquename, $firstname, $lastname, $firstandlastname, $driveruniquename, $driverfirstandlastname, $driveruniquename2, $driverfirstandlastname2, $program, $dateEventStamp, $mileageDepart, $fuelDepart, $notes, $phone, $vehiclenum, $imagefrontstartfilename, $imagedriverstartfilename, $imagepassengerstartfilename, $imagebackstartfilename);
+//        $stmt->bind_param($bind_type, ...$bind_var);
+         if (!call_user_func_array('mysqli_stmt_bind_param', array_merge(array($stmt, $bind_type), $bind_var))){
+            print "binding failed.\n";
+         }
+
+//	if ($db->query($sql) === true) 
+	if ($stmt->execute()) {
 	//	echo "Record updated successfully";
 	}//if
 	else {
@@ -581,6 +602,8 @@ if ($isAdmin) {
 function uploadAndProcessImageFile($image, $sql) {
 		global $uniquename;
 		global $check_parking;
+		global $bind_type;
+		global $bind_var;
          	$purifier = new HTMLPurifier();
 		$vehiclenum = $purifier->purify($_POST['vehiclenum']);
 		$file_name = $_FILES[$image]['name'];
@@ -600,39 +623,70 @@ function uploadAndProcessImageFile($image, $sql) {
 //		move_uploaded_file($_FILES[$image]["tmp_name"], "admin/uploads/" . $newfilename);
 
 		if ( $file_name != "" && $image == "imagefrontsite") {
-			$sql .= ", imagefrontsitefilename='$newfilename' ";
+//			$sql .= ", imagefrontsitefilename='$newfilename' ";
+			$sql .= ", imagefrontsitefilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
 		}//if
 		if ( $file_name != "" && $image == "imagedriversite") {
-			$sql .= ", imagedriversitefilename='$newfilename' ";
+//			$sql .= ", imagedriversitefilename='$newfilename' ";
+			$sql .= ", imagedriversitefilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
+
 		}//if
 		if ( $file_name != "" && $image == "imagepassengersite") {
-			$sql .= ", imagepassengersitefilename='$newfilename' ";
+//			$sql .= ", imagepassengersitefilename='$newfilename' ";
+			$sql .= ", imagepassengersitefilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
 		}//if
 		if ( $file_name != "" && $image == "imagebacksite") {
-			$sql .= ", imagebacksitefilename='$newfilename' ";
+//			$sql .= ", imagebacksitefilename='$newfilename' ";
+			$sql .= ", imagebacksitefilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
 		}//if
 		if ( $file_name != "" && $image == "imagedamagesite") {
-			$sql .= ", imagedamagesitefilename='$newfilename' ";
+//			$sql .= ", imagedamagesitefilename='$newfilename' ";
+			$sql .= ", imagedamagesitefilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
                         $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagefrontend") {
-			$sql .= ", imagefrontendfilename='$newfilename' ";
+//			$sql .= ", imagefrontendfilename='$newfilename' ";
+			$sql .= ", imagefrontendfilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
                         $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagedriverend") {
-			$sql .= ", imagedriverendfilename='$newfilename' ";
+//			$sql .= ", imagedriverendfilename='$newfilename' ";
+			$sql .= ", imagedriverendfilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
                         $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagepassengerend") {
-			$sql .= ", imagepassengerendfilename='$newfilename' ";
+//			$sql .= ", imagepassengerendfilename='$newfilename' ";
+			$sql .= ", imagepassengerendfilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
                         $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagebackend") {
-			$sql .= ", imagebackendfilename='$newfilename' ";
+//			$sql .= ", imagebackendfilename='$newfilename' ";
+			$sql .= ", imagebackendfilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
                         $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagedamageend") {
-			$sql .= ", imagedamageendfilename='$newfilename' ";
+//			$sql .= ", imagedamageendfilename='$newfilename' ";
+			$sql .= ", imagedamageendfilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
                         $check_parking = "yes";
 		}//if
 
