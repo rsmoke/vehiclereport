@@ -260,7 +260,7 @@ else {
 
 
 		 <div class="form-group row">
-		  <label for="fuel-gauge-controlReturn">Fuel (Return)</label>
+		  <label for="fuel-gauge-controlReturn">Fuel (Return)<br>tap bar to move</label>
 			  <div class="ml-3 col-5">
 				  <div id="fuel-gaugeReturn" name="fuelGaugeReturn"></div>
 					<br>
@@ -796,6 +796,8 @@ if ($getFuelValue == "" ) {
 
 
 $( function () {
+  var fuel = "<?php if (isset($_POST['fuelReturn'])) {echo $purifier->purify($_POST['fuelReturn']);} else { echo 'hell';} ?>";
+  if (fuel == "hell"){
   $myFuelGaugeReturn = $("div#fuel-gaugeReturn").dynameter({
     width: 200,
     label: 'fuel %',
@@ -834,7 +836,48 @@ $( function () {
 	   }//if
 	}
   });
+  }
+  else {
+$myFuelGaugeReturn = $("div#fuel-gaugeReturn").dynameter({
+    width: 200,
+    label: 'fuel %',
+    value: fuel,
+    min: 0.0,
+    max: 100.0,
+    unit: '%',
+    regions: { // Value-keys and color-refs
+      0: 'error',
+      50: 'normal'
+    }
+  });
+  // jQuery UI slider widget
+  $('div#fuel-gauge-controlReturn').slider({
+        width: 400,
+    min: 0.0,
+    max: 100.0,
+    value: fuel,
+    step: 12.5,
+    slide: function (evt, ui) {
+    
+      $myFuelGaugeReturn.changeValue((ui.value).toFixed(1));
+          $("#fuelReturn").val(ui.value);
+    
+    },
+        stop: function (evt, ui) {
+          
+        var $fuelAmount =  parseFloat($("#fuelReturn").val());
+           if ( $fuelAmount <=  50) {
+                $("#fuelIsTooLow").show();
+           }//if
 
+            if ( $fuelAmount >  50) {
+                $("#fuelIsTooLow").hide();
+           }//if
+        }
+  });
+
+
+}
 });
 </script>
 
