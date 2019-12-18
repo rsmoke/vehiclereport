@@ -89,12 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$fuelReturn = $purifier->purify($_POST['fuelReturn']);
 	$parking = $purifier->purify($_POST['parking']);
 	$notes = $purifier->purify($_POST['notes']);
-        if (isset($_POST['adminnotes'])) {
-	     $adminnotes = $purifier->purify($_POST['adminnotes']);
-        }
-        else {
-             $adminnotes = "";
-        }
+        $adminnotes = $purifier->purify($_POST['adminnotes']);
 	$id = $purifier->purify($_POST['hiddenID']);
 	$mod_on = date('Y-m-d H:i:s');
 
