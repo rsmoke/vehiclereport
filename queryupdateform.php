@@ -122,6 +122,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           if ($fuelReturn == "") {
               $errors .= "Fuel (Return)<br>";
           } 
+          if ($mileageReturn == "") {
+              $errors .= "Mileage (Return)<br>";
+          }
         } 
         if ($errors != "") {
                 $errors = "<div class=\"alert alert-danger\" role=\"alert\"><h4>The following fields are required: </h4>".$errors."</div>";
