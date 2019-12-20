@@ -140,10 +140,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $db->stmt_init();
         $stmt->prepare($sql);
 //        $stmt->bind_param('sssssssssssssssssss', $uniquename, $firstname, $lastname, $firstandlastname, $driveruniquename, $driverfirstandlastname, $driveruniquename2, $driverfirstandlastname2, $program, $dateEventStamp, $mileageDepart, $fuelDepart, $notes, $phone, $vehiclenum, $imagefrontstartfilename, $imagedriverstartfilename, $imagepassengerstartfilename, $imagebackstartfilename);
-//        $stmt->bind_param($bind_type, ...$bind_var);
-         if (!call_user_func_array('mysqli_stmt_bind_param', array_merge(array($stmt, $bind_type), $bind_var))){
-            print "binding failed.\n";
-         }
+        $stmt->bind_param($bind_type, ...$bind_var);
+//         if (!call_user_func_array('mysqli_stmt_bind_param', array_merge(array($stmt, $bind_type), $bind_var))){
+ //           print "binding failed.\n";
+   //      }
 
 //	if ($db->query($sql) === true) 
 	if ($stmt->execute()) {
