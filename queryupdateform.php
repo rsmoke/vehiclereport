@@ -266,7 +266,7 @@ else {
 					<br>
 					<div id="fuel-gauge-controlReturn"></div>
 			  </div>
-			<input type="hidden" name="fuelReturn" id="fuelReturn" value="<?php echo $value["fuelReturn"]; ?>">
+			<input type="hidden" name="fuelReturn" id="fuelReturn" value="<?php if (isset($_POST['fuelReturn'])) {echo $purifier->purify($_POST['fuelReturn']);} else { echo $value["fuelReturn"];} ?>">
 		</div>
 
 		<div id="fuelIsTooLow" class="alert alert-danger" role="alert"><h4>You need to go to Transportation Services (1213 Kipke Dr, Ann Arbor, MI 48109) to refuel this vehicle immediately.</h4></div>
