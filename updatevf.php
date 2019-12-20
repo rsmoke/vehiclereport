@@ -38,14 +38,25 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 		}//while
 		?>
 		
-		<table class="table table-striped table-bordered">
+                <table class="table table-sm table-responsive table-striped table-bordered">
+
           <thead>
               <tr>
-				<th></th>
-				<th>Vehicle #</th>
-				<th>Status</th>
-				<th>Date</th>
-				<th>ID</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">Vehicle #</th>
+                                <th scope="col">Student Status</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Course #</th>
+                                <th scope="col">Mileage Driven</th>
+                                <th scope="col">Mileage (Depart)</th>
+                                <th scope="col">Fuel (Depart)</th>
+                                <th scope="col">Mileage (Return)</th>
+                                <th scope="col">Fuel (Return)</th>
+                                <th scope="col">Parking</th>
+                                <th scope="col">Admin Status</th>
+                                <th scope="col">ID</th>
+
               </tr>
             </thead>
             <tbody>	
@@ -92,6 +103,38 @@ if ($isAdmin) {
 				</td>
 				
 				<td> <?php echo $value["dateEvent"]; ?> </td>
+<td> <?php echo $value["firstname"]." ".$value["lastname"]; ?> </td>
+ <td> <?php echo $value["program"]; ?> </td>
+
+                                <td>
+                                <?php
+                                        $mileageDriven = ((isset($value["mileageReturn"]))? $value["mileageReturn"] : $value["mileageDepart"]) - $value["mileageDepart"];
+                                        echo $mileageDriven;
+                                ?></td>
+
+                                <td> <?php echo $value["mileageDepart"]; ?> </td>
+
+                                <td> <?php echo $value["fuelDepart"]; ?> </td>
+
+                                <td> <?php echo $value["mileageReturn"]; ?> </td>
+
+                                <td> <?php echo $value["fuelReturn"]; ?> </td>
+
+                                <td> <?php echo $value["parking"]; ?> </td>
+<td>
+                                <?php
+                                        if (($value["adminnotes"] == "")) { ?>
+                                                <span class="label label-warning">Not Completed</span>
+                                        <?php
+                                        }//if
+                                        else { ?>
+                                                <span class="label label-success">Completed</span>
+                                        <?php
+                                        }//else
+                                        ?>
+                                </td>
+
+
 				
 				<td> <?php echo $value['IDvf']; ?> </td>
 			</tr>

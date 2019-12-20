@@ -235,7 +235,7 @@ $purifier = new HTMLPurifier();
 
 			<div class="form-group row">
 				<label for="lastname" >Phone</label>
-				<input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number" value="<?php (isset($phone))? $phone : "";?>">
+				<input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number" value="<?php echo (isset($phone))? $phone : "";?>">
 			</div>
 
 			<div class="form-group row">
@@ -250,7 +250,7 @@ $purifier = new HTMLPurifier();
 
 			<div class="form-group row">
 				<label>Course Number / Program</label>
-				<textarea class="form-control" rows="4" id="program" name="program" placeholder="Course Number / Program"></textarea>
+				<textarea class="form-control" rows="4" id="program" name="program" placeholder="Course Number / Program"><?php echo (isset($program))? $program : ""; ?></textarea>
 			</div>
 
 			<div class="form-group row">
@@ -260,13 +260,13 @@ $purifier = new HTMLPurifier();
 
 			<!--fuel depart-->
 			<div class="form-group row">
-				<label for="fuel-gauge-controlDepart">Fuel (Depart)</label>
+				<label for="fuel-gauge-controlDepart">Fuel (Depart)<br>tap bar to move</label>
 					<div class="ml-3 col-5">
 						<div id="fuel-gaugeDepart" name="fuelGaugeDepart"></div>
 						<br>
 						<div id="fuel-gauge-controlDepart"></div>
 					</div>
-				<input type="hidden" name="fuelDepart" id="fuelDepart" value="">
+				<input type="hidden" name="fuelDepart" id="fuelDepart" value="<?php echo (isset($fuelDepart))? $fuelDepart : ""; ?>">
 			</div>
 
 			<br><br>
@@ -326,7 +326,7 @@ $purifier = new HTMLPurifier();
 
 			<div class="form-group row">
 				<label for="notes" >Notes (optional)</label>
-				<textarea class="form-control" rows="4" id="notes" name="notes" placeholder="Notes"></textarea>
+				<textarea class="form-control" rows="4" id="notes" name="notes" placeholder="Notes"><?php echo (isset($notes))? $notes : ""; ?></textarea>
 			</div>
 
 			<div class="form-group row justify-content-center">
@@ -527,6 +527,8 @@ function findVehicle(vehicleNum) {
 var $myFuelGaugeDepart;
 
 $( function () {
+ var fuel = "<?php if (isset($_POST['fuelDepart'])) {echo $purifier->purify($_POST['fuelDepart']);} else { echo 'hell';} ?>";
+  if (fuel == "hell"){
   $myFuelGaugeDepart = $("div#fuel-gaugeDepart").dynameter({
     width: 200,
     label: 'fuel %',
@@ -540,7 +542,6 @@ $( function () {
     }
   });
 
-
   // jQuery UI slider widget
   $('div#fuel-gauge-controlDepart').slider({
 	width: 400,
@@ -549,10 +550,41 @@ $( function () {
     value: 0,
     step: 12.5,
     slide: function (evt, ui) {
+console.log(ui.value);
       $myFuelGaugeDepart.changeValue((ui.value).toFixed(1));
 	  $("#fuelDepart").val(ui.value);
     }
   });
+  }
+  else {
+  $myFuelGaugeDepart = $("div#fuel-gaugeDepart").dynameter({
+    width: 200,
+    label: 'fuel %',
+    value: fuel,
+    min: 0.0,
+    max: 100.0,
+    unit: '%',
+    regions: { // Value-keys and color-refs
+      0: 'error',
+      51: 'normal'
+    }
+  });
+
+
+   $('div#fuel-gauge-controlDepart').slider({
+        width: 400,
+    min: 0.0,
+    max: 100.0,
+    value: fuel,
+    step: 12.5,
+    slide: function (evt, ui) {
+console.log(ui.value);
+      $myFuelGaugeDepart.changeValue((ui.value).toFixed(1));
+          $("#fuelDepart").val(ui.value);
+    }
+  });
+
+  }
 
 });
 </script>

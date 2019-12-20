@@ -11,6 +11,11 @@ $purifier = new HTMLPurifier();
       ?>
 <script type="text/javascript" src="js/dist/purify.min.js"></script>
         <script>
+              function parking_message(div_id) {
+                 $('#'+div_id).prepend('<span style="color:red;margin-left:5px;">Do not forget to add parking notes</span>');
+              }
+        </script>
+        <script>
                 function validate_uniqname(str, name_id) {
                         var str = DOMPurify.sanitize(str);
                         var div_id = name_id + "_error";
@@ -57,6 +62,7 @@ $purifier = new HTMLPurifier();
 
 
 <?php
+/*
 	$id = trim($_GET['id']);
 
   if ($id != "") {
@@ -66,11 +72,14 @@ $purifier = new HTMLPurifier();
   else {
     $sql = "SELECT * from transportation_vf WHERE IDvf = '$id' AND (uniquename = '$uniquename' OR driveruniquename = '$uniquename' OR driveruniquename2 = '$uniquename')";
   }
+*/
 ?>
 
 
 
 <?php
+$errors = ""; //Clean out errors
+$check_parking = "no";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$phone = $purifier->purify($_POST['phone']);
@@ -80,11 +89,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$fuelReturn = $purifier->purify($_POST['fuelReturn']);
 	$parking = $purifier->purify($_POST['parking']);
 	$notes = $purifier->purify($_POST['notes']);
-	$adminnotes = $purifier->purify($_POST['adminnotes']);
+        $adminnotes = $purifier->purify($_POST['adminnotes']);
 	$id = $purifier->purify($_POST['hiddenID']);
 	$mod_on = date('Y-m-d H:i:s');
 
-	$sql = "UPDATE transportation_vf SET phone='$phone', driverfirstandlastname2='$driverfirstandlastname2', driveruniquename2='$driveruniquename2', mileageReturn='$mileageReturn', fuelReturn='$fuelReturn', parking='$parking', notes='$notes', adminnotes='$adminnotes', mod_on='$mod_on'";
+//	$sql = "UPDATE transportation_vf SET phone='$phone', driverfirstandlastname2='$driverfirstandlastname2', driveruniquename2='$driveruniquename2', mileageReturn='$mileageReturn', fuelReturn='$fuelReturn', parking='$parking', notes='$notes', adminnotes='$adminnotes', mod_on='$mod_on'";
+	$sql = "UPDATE transportation_vf SET phone=?, driverfirstandlastname2=?, driveruniquename2=?, mileageReturn=?, fuelReturn=?, parking=?, notes=?, adminnotes=?, mod_on=?";
+
+        $bind_type = "sssssssss";
+        $bind_var = [$phone, $driverfirstandlastname2, $driveruniquename2, $mileageReturn, $fuelReturn, $parking, $notes, $adminnotes, $mod_on];
 
 	$sql = uploadAndProcessImageFile("imagefrontsite", $sql);
 	$sql = uploadAndProcessImageFile("imagedriversite", $sql);
@@ -98,14 +111,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$sql = uploadAndProcessImageFile("imagebackend", $sql);
 	$sql = uploadAndProcessImageFile("imagedamageend", $sql);
 
-	$sql .= " WHERE IDvf = '$id'";
-
+//	$sql .= " WHERE IDvf = '$id'";
+	$sql .= " WHERE IDvf = ?";
+        $bind_type .= "d";
+        $bind_var[] = $id;
+        if ($check_parking == "yes") {
+          if ($parking == "") {
+              $errors .= "Parking<br>";
+          } 
+          if ($fuelReturn == "") {
+              $errors .= "Fuel (Return)<br>";
+          } 
+          if ($mileageReturn == "") {
+              $errors .= "Mileage (Return)<br>";
+          }
+        } 
+        if ($errors != "") {
+                $errors = "<div class=\"alert alert-danger\" role=\"alert\"><h4>The following fields are required: </h4>".$errors."</div>";
+                        echo $errors;
+        }//if
+        else {
+           $check_parking = "no";
+        }
+} // POST
+     if ($_SERVER['REQUEST_METHOD'] == 'POST' && $check_parking == "no") {
+//echo $sql;
 	//Uncomment for troubleshooting
-	if ($db->query($sql) === true) {
-		//echo "Record updated successfully";
+        $stmt = $db->stmt_init();
+        $stmt->prepare($sql);
+//        $stmt->bind_param('sssssssssssssssssss', $uniquename, $firstname, $lastname, $firstandlastname, $driveruniquename, $driverfirstandlastname, $driveruniquename2, $driverfirstandlastname2, $program, $dateEventStamp, $mileageDepart, $fuelDepart, $notes, $phone, $vehiclenum, $imagefrontstartfilename, $imagedriverstartfilename, $imagepassengerstartfilename, $imagebackstartfilename);
+        $stmt->bind_param($bind_type, ...$bind_var);
+//         if (!call_user_func_array('mysqli_stmt_bind_param', array_merge(array($stmt, $bind_type), $bind_var))){
+ //           print "binding failed.\n";
+   //      }
+
+//	if ($db->query($sql) === true) 
+	if ($stmt->execute()) {
+	//	echo "Record updated successfully";
 	}//if
 	else {
-		//die('There was an error running the query [' . $mysqli->error . ']');
+		die('There was an error running the query ');
 	}//else
 
 	$db->close();
@@ -117,6 +162,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	You may close this window or go back to the <a href=\"updatevf.php\">update form page</a>.</div>";
 }//if
 else {
+        $id = trim($_GET['id']);
+
+  if ($id != "") {
+   if ($isAdmin) {
+    $sql = "SELECT * from transportation_vf WHERE IDvf = '$id'";
+  }
+  else {
+    $sql = "SELECT * from transportation_vf WHERE IDvf = '$id' AND (uniquename = '$uniquename' OR driveruniquename = '$uniquename' OR driveruniquename2 = '$uniquename')";
+  }
+
 	?>
 
   <form method="post" id="formEdit" name="formEdit" enctype="multipart/form-data">
@@ -193,7 +248,7 @@ else {
 
 		 <div class="form-group row">
 			<label for="mileageDepart">Mileage (Return)</label>
-			<input type="text" class="form-control" id="mileageReturn" name="mileageReturn"  min="0" placeholder="000.00" value="<?php echo $value["mileageReturn"]; ?>" pattern="\d*\.?\d*" title="Enter a decimal number: 000.00">
+			<input onchange="parking_message('parking_message')" type="text" class="form-control" id="mileageReturn" name="mileageReturn"  min="0" placeholder="000.00" value="<?php echo $value["mileageReturn"]; ?>" pattern="\d*\.?\d*" title="Enter a decimal number: 000.00">
 
 		 </div>
 		<div class="form-group row">
@@ -205,18 +260,19 @@ else {
 
 
 		 <div class="form-group row">
-		  <label for="fuel-gauge-controlReturn">Fuel (Return)</label>
+		  <label for="fuel-gauge-controlReturn">Fuel (Return)<br>tap bar to move</label>
 			  <div class="ml-3 col-5">
 				  <div id="fuel-gaugeReturn" name="fuelGaugeReturn"></div>
 					<br>
 					<div id="fuel-gauge-controlReturn"></div>
 			  </div>
-			<input type="hidden" name="fuelReturn" id="fuelReturn" value="<?php echo $value["fuelReturn"]; ?>">
+			<input type="hidden" name="fuelReturn" id="fuelReturn" value="<?php if (isset($_POST['fuelReturn'])) {echo $purifier->purify($_POST['fuelReturn']);} else { echo $value["fuelReturn"];} ?>">
 		</div>
 
 		<div id="fuelIsTooLow" class="alert alert-danger" role="alert"><h4>You need to go to Transportation Services (1213 Kipke Dr, Ann Arbor, MI 48109) to refuel this vehicle immediately.</h4></div>
 
 
+<div id='parking_message'></div>
 		 <div class="form-group row">
 			<label for="mileageDepart">Parking structure & Floor Number</label>
 			<textarea class="form-control" rows="3" id="parking" name="parking" placeholder="Parking Location"><?php echo $value["parking"]; ?></textarea>
@@ -538,16 +594,16 @@ if ($isAdmin) {
 }//else for POST
 
   }
-?>
 
 
 
-<?php
 function uploadAndProcessImageFile($image, $sql) {
 		global $uniquename;
-	  $purifier = new HTMLPurifier();
+		global $check_parking;
+		global $bind_type;
+		global $bind_var;
+         	$purifier = new HTMLPurifier();
 		$vehiclenum = $purifier->purify($_POST['vehiclenum']);
-
 		$file_name = $_FILES[$image]['name'];
 		$file_size = $_FILES[$image]['size'];
 		$file_tmp = $_FILES[$image]['tmp_name'];
@@ -565,34 +621,71 @@ function uploadAndProcessImageFile($image, $sql) {
 //		move_uploaded_file($_FILES[$image]["tmp_name"], "admin/uploads/" . $newfilename);
 
 		if ( $file_name != "" && $image == "imagefrontsite") {
-			$sql .= ", imagefrontsitefilename='$newfilename' ";
+//			$sql .= ", imagefrontsitefilename='$newfilename' ";
+			$sql .= ", imagefrontsitefilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
 		}//if
 		if ( $file_name != "" && $image == "imagedriversite") {
-			$sql .= ", imagedriversitefilename='$newfilename' ";
+//			$sql .= ", imagedriversitefilename='$newfilename' ";
+			$sql .= ", imagedriversitefilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
+
 		}//if
 		if ( $file_name != "" && $image == "imagepassengersite") {
-			$sql .= ", imagepassengersitefilename='$newfilename' ";
+//			$sql .= ", imagepassengersitefilename='$newfilename' ";
+			$sql .= ", imagepassengersitefilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
 		}//if
 		if ( $file_name != "" && $image == "imagebacksite") {
-			$sql .= ", imagebacksitefilename='$newfilename' ";
+//			$sql .= ", imagebacksitefilename='$newfilename' ";
+			$sql .= ", imagebacksitefilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
 		}//if
 		if ( $file_name != "" && $image == "imagedamagesite") {
-			$sql .= ", imagedamagesitefilename='$newfilename' ";
+//			$sql .= ", imagedamagesitefilename='$newfilename' ";
+			$sql .= ", imagedamagesitefilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
+                        $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagefrontend") {
-			$sql .= ", imagefrontendfilename='$newfilename' ";
+//			$sql .= ", imagefrontendfilename='$newfilename' ";
+			$sql .= ", imagefrontendfilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
+                        $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagedriverend") {
-			$sql .= ", imagedriverendfilename='$newfilename' ";
+//			$sql .= ", imagedriverendfilename='$newfilename' ";
+			$sql .= ", imagedriverendfilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
+                        $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagepassengerend") {
-			$sql .= ", imagepassengerendfilename='$newfilename' ";
+//			$sql .= ", imagepassengerendfilename='$newfilename' ";
+			$sql .= ", imagepassengerendfilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
+                        $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagebackend") {
-			$sql .= ", imagebackendfilename='$newfilename' ";
+//			$sql .= ", imagebackendfilename='$newfilename' ";
+			$sql .= ", imagebackendfilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
+                        $check_parking = "yes";
 		}//if
 		if ( $file_name != "" && $image == "imagedamageend") {
-			$sql .= ", imagedamageendfilename='$newfilename' ";
+//			$sql .= ", imagedamageendfilename='$newfilename' ";
+			$sql .= ", imagedamageendfilename=?";
+                        $bind_type .= "s";
+                        $bind_var[] = $newfilename;
+                        $check_parking = "yes";
 		}//if
 
 	return $sql;
@@ -703,6 +796,8 @@ if ($getFuelValue == "" ) {
 
 
 $( function () {
+  var fuel = "<?php if (isset($_POST['fuelReturn'])) {echo $purifier->purify($_POST['fuelReturn']);} else { echo 'hell';} ?>";
+  if (fuel == "hell"){
   $myFuelGaugeReturn = $("div#fuel-gaugeReturn").dynameter({
     width: 200,
     label: 'fuel %',
@@ -741,7 +836,48 @@ $( function () {
 	   }//if
 	}
   });
+  }
+  else {
+$myFuelGaugeReturn = $("div#fuel-gaugeReturn").dynameter({
+    width: 200,
+    label: 'fuel %',
+    value: fuel,
+    min: 0.0,
+    max: 100.0,
+    unit: '%',
+    regions: { // Value-keys and color-refs
+      0: 'error',
+      50: 'normal'
+    }
+  });
+  // jQuery UI slider widget
+  $('div#fuel-gauge-controlReturn').slider({
+        width: 400,
+    min: 0.0,
+    max: 100.0,
+    value: fuel,
+    step: 12.5,
+    slide: function (evt, ui) {
+    
+      $myFuelGaugeReturn.changeValue((ui.value).toFixed(1));
+          $("#fuelReturn").val(ui.value);
+    
+    },
+        stop: function (evt, ui) {
+          
+        var $fuelAmount =  parseFloat($("#fuelReturn").val());
+           if ( $fuelAmount <=  50) {
+                $("#fuelIsTooLow").show();
+           }//if
 
+            if ( $fuelAmount >  50) {
+                $("#fuelIsTooLow").hide();
+           }//if
+        }
+  });
+
+
+}
 });
 </script>
 
