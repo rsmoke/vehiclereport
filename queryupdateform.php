@@ -12,7 +12,7 @@ $purifier = new HTMLPurifier();
 <script type="text/javascript" src="js/dist/purify.min.js"></script>
         <script>
               function parking_message(div_id) {
-                 $('#'+div_id).prepend('<span style="color:red;margin-left:5px;">Do not forget to add parking notes</span>');
+                 $('#'+div_id).prepend('<span style="color:red;margin-left:5px;">Please make sure to record parking structure & Floor Number upon return.</span>');
               }
         </script>
         <script>
