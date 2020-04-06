@@ -155,11 +155,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$db->close();
 
-
-	echo "<div class=\"alert alert-success\"><strong>Vehicle information has been updated. </strong><br><br>
-
-
-	You may close this window or go back to the <a href=\"updatevf.php\">update form page</a>.</div>";
+	if ($parking == ''){
+		echo "<div class=\"alert alert-warning\"><strong>Your form has NOT been marked complete. 
+		Your form will be marked complete once parking structure and floor number are recorded
+		upon return to campus. </strong><br><br>
+		You may close this window or go back to the <a href=\"updatevf.php\">update form page</a>.</div>";
+	}
+	else {
+		echo "<div class=\"alert alert-success\"><strong>Vehicle information has been updated. </strong><br><br>
+		You may close this window or go back to the <a href=\"updatevf.php\">update form page</a>.</div>";
+	}
 }//if
 else {
         $id = trim($_GET['id']);
