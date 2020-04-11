@@ -177,17 +177,19 @@ $purifier = new HTMLPurifier();
 
 			$db->close();
 
-			echo "<div class=\"alert alert-success\"><strong>Your information has been submitted.</strong> Upon return, please use the \"Update Form\" link to enter return milage, fuel level, and parking location.<br><br>
-
+			echo "<div class=\"alert alert-warning\">Thank you for submitting vehicle departure information.<strong>Your form is in progress.</strong>
+			Upon return to campus, please go to the \"Update Form\" page to upload images and record parking structure and floor number to complete the form.<br><br>
 			You may close this window.</div>";
-
 		} else  {
 			$name = ldapGleaner($uniquename);
   ?>
 	<form method="post" id="formdirectory" name="formdirectory"  enctype="multipart/form-data">
 
 		<fieldset>
-
+<div><p style="color:blue; font-weight:bold">If you are providing updated information on a current reservation, such as updating on-site images, return images, and/or parking information,
+ please click into the menu on the top right corner of your screen, then select "Update Form." DO NOT use the form on this screen for providing
+  updated information on a current reservation. This form is for new reservation departure information ONLY.</p>
+</div>
 			<div class="form-group row">
 				<label for= "datetimepickerToday">Date</label>
 				<input type="text" class="form-control" id="datetimepickerToday" name="datetimepickerToday" value="<?php echo $today ?>">

@@ -80,6 +80,7 @@ $purifier = new HTMLPurifier();
 <?php
 $errors = ""; //Clean out errors
 $check_parking = "no";
+$image_num = 0;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$phone = $purifier->purify($_POST['phone']);
@@ -155,15 +156,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$db->close();
 
-	if ($parking == ''){
-		echo "<div class=\"alert alert-warning\"><strong>Your form has NOT been marked complete. 
-		Your form will be marked complete once parking structure and floor number are recorded
-		upon return to campus. </strong><br><br>
-		You may close this window or go back to the <a href=\"updatevf.php\">update form page</a>.</div>";
-	}
+	if ($parking != '' && $image_num > 3) {
+			echo "<div class=\"alert alert-success\"><strong>Success! Your form is now complete.</strong><br>
+			Please return the car key to East Quad lock box. Thank you!";
+		}
 	else {
-		echo "<div class=\"alert alert-success\"><strong>Vehicle information has been updated. </strong><br><br>
-		You may close this window or go back to the <a href=\"updatevf.php\">update form page</a>.</div>";
+		echo "<div class=\"alert alert-warning\"><strong>Your updates have been recorded, and your form is <strong>in progress.</strong>
+		To complete the form, please go to the <strong>\"Update Form\" </strong> page to upload images and record parking structure and floor number
+		upon return to campus. <br><br></div>";
 	}
 }//if
 else {
@@ -607,6 +607,7 @@ function uploadAndProcessImageFile($image, $sql) {
 		global $check_parking;
 		global $bind_type;
 		global $bind_var;
+		global $image_num;
          	$purifier = new HTMLPurifier();
 		$vehiclenum = $purifier->purify($_POST['vehiclenum']);
 		$file_name = $_FILES[$image]['name'];
@@ -662,28 +663,32 @@ function uploadAndProcessImageFile($image, $sql) {
 			$sql .= ", imagefrontendfilename=?";
                         $bind_type .= "s";
                         $bind_var[] = $newfilename;
-                        $check_parking = "yes";
+						$check_parking = "yes";
+						$image_num += 1;
 		}//if
 		if ( $file_name != "" && $image == "imagedriverend") {
 //			$sql .= ", imagedriverendfilename='$newfilename' ";
 			$sql .= ", imagedriverendfilename=?";
                         $bind_type .= "s";
                         $bind_var[] = $newfilename;
-                        $check_parking = "yes";
+						$check_parking = "yes";
+						$image_num += 1;
 		}//if
 		if ( $file_name != "" && $image == "imagepassengerend") {
 //			$sql .= ", imagepassengerendfilename='$newfilename' ";
 			$sql .= ", imagepassengerendfilename=?";
                         $bind_type .= "s";
                         $bind_var[] = $newfilename;
-                        $check_parking = "yes";
+						$check_parking = "yes";
+						$image_num += 1;
 		}//if
 		if ( $file_name != "" && $image == "imagebackend") {
 //			$sql .= ", imagebackendfilename='$newfilename' ";
 			$sql .= ", imagebackendfilename=?";
                         $bind_type .= "s";
                         $bind_var[] = $newfilename;
-                        $check_parking = "yes";
+						$check_parking = "yes";
+						$image_num += 1;
 		}//if
 		if ( $file_name != "" && $image == "imagedamageend") {
 //			$sql .= ", imagedamageendfilename='$newfilename' ";
