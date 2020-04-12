@@ -80,7 +80,12 @@ $purifier = new HTMLPurifier();
 <?php
 $errors = ""; //Clean out errors
 $check_parking = "no";
-$image_num = 0;
+if (isset($_REQUEST['image_num'])) {
+	$image_num = (int)$_REQUEST['image_num'];
+}
+else {
+	$image_num = 0;
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$phone = $purifier->purify($_POST['phone']);
@@ -443,12 +448,14 @@ echo "</div>";
 
 <td>
 					<?php
+					$image_num = 0;
 						if ( $value["imagefrontendfilename"] == "" ) {
 							echo '<div class="custom-file">';
 							echo '<input type="file" id="imagefrontend" name="imagefrontend" class="custom-file-input" >';
 							echo '<label for="imagefrontend" class="custom-file-label">Front(returned)</label>';
 							echo '</div>';
 						} else {
+							$image_num += 1;
 echo '<div style="float:left;">';
 							echo 'Front <br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagefrontendfilename"] .'" target="_blank">';
@@ -471,6 +478,7 @@ echo "</div>";
 							echo '<label for="imagedriverend" class="custom-file-label">Driver (returned)</label>';
 							echo '</div>';
 						} else {
+							$image_num += 1;
 echo '<div style="float:left;">';
 							echo 'Driver <br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagedriverendfilename"] .'" target="_blank">';
@@ -493,6 +501,7 @@ echo "</div>";
 							echo '<label for="imagepassengerend" class="custom-file-label">Passenger (returned)</label>';
 							echo '</div>';
 						} else {
+							$image_num += 1;
 echo '<div style="float:left;">';
 							echo 'Passenger <br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagepassengerendfilename"] .'" target="_blank">';
@@ -515,6 +524,7 @@ echo "</div>";
 							echo '<label for="imagebackend" class="custom-file-label">Back (returned)</label>';
 							echo '</div>';
 						} else {
+							$image_num += 1;
 echo '<div style="float:left;">';
 							echo 'Back <br> ';
                                                         echo '<a href="admin/uploads/'. $value["imagebackendfilename"] .'" target="_blank">';
@@ -576,7 +586,7 @@ if ($isAdmin) {
 					<div class="alert alert-danger text-center" role="alert" ><h4>If you see any new damage to the vehicle, please notify us at <a href="mailto:<?php echo "$addressEmail";?>"><?php echo "$addressEmail";?></a>.</h4></div>
 				</div>
 			</div>
-
+			<input type="hidden" name="image_num" id="image_num" value="<?php echo $image_num; ?>" />
 			<input type="hidden" name="hiddenID" id="hiddenID" value="<?php echo $value["IDvf"]; ?>" />
 			<input type="hidden" name="vehiclenum" id="vehiclenum" value="<?php echo $value["vehiclenum"]; ?>" />
 

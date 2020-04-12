@@ -178,8 +178,7 @@ $purifier = new HTMLPurifier();
 			$db->close();
 
 			echo "<div class=\"alert alert-warning\">Thank you for submitting vehicle departure information.<strong>Your form is in progress.</strong>
-			Upon return to campus, please go to the \"Update Form\" page to upload images and record parking structure and floor number to complete the form.<br><br>
-			You may close this window.</div>";
+			Upon return to campus, please go to the \"Update Form\" page to upload images and record parking structure and floor number to complete the form.</div>";
 		} else  {
 			$name = ldapGleaner($uniquename);
   ?>
