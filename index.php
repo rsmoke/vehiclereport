@@ -185,9 +185,9 @@ $purifier = new HTMLPurifier();
 	<form method="post" id="formdirectory" name="formdirectory"  enctype="multipart/form-data">
 
 		<fieldset>
-<div><p style="color:blue; font-weight:bold">If you are providing updated information on a current reservation, such as updating on-site images, return images, and/or parking information,
- please click into the menu on the top right corner of your screen, then select "Update Form." DO NOT use the form on this screen for providing
-  updated information on a current reservation. This form is for new reservation departure information ONLY.</p>
+<div><p> <strong><font color="blue">If you are providing updated information on a current reservation, such as updating on-site images, return images, and/or parking information,
+ please click into the menu on the top right corner of your screen, then select "Update Form."</font> <font color="red">DO NOT use the form on this screen for providing
+  updated information on a current reservation.</font> <font color="blue">This form is for new reservation departure information ONLY.</font></strong></p>
 </div>
 			<div class="form-group row">
 				<label for= "datetimepickerToday">Date</label>
