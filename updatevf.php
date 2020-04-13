@@ -54,6 +54,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
                                 <th scope="col">Mileage (Return)</th>
                                 <th scope="col">Fuel (Return)</th>
                                 <th scope="col">Parking</th>
+                                <th scope="col">Notes</th>
                                 <th scope="col">Admin Status</th>
                                 <th scope="col">ID</th>
 
@@ -121,6 +122,7 @@ if ($isAdmin) {
                                 <td> <?php echo $value["fuelReturn"]; ?> </td>
 
                                 <td> <?php echo $value["parking"]; ?> </td>
+                                <td> <?php echo $value["notes"]; ?> </td>
 <td>
                                 <?php
                                         if (($value["adminnotes"] == "")) { ?>
