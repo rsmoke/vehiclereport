@@ -84,3 +84,27 @@
 #container .snippet-container pre.sh_sourceCode span.sh_comment {
   color: #777;
 }
+
+.floatleft
+{
+        float: left;
+        font: 90% arial,sans-serif;
+}
+
+input[type=button], input[type=submit], input[type=reset] {
+  font: 110% arial,sans-serif;
+  -webkit-appearance: push-button;
+    user-select: none;
+    white-space: pre;
+    align-items: flex-start;
+    text-align: center;
+    cursor: default;
+    color: buttontext;
+    background-color: buttonface;
+    box-sizing: border-box;
+    padding: 1px 7px 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186);
+    border-image: initial;
+}

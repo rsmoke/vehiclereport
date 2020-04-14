@@ -4,6 +4,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="css/index.css" type="text/css">
+
     <?php include("_head.php"); ?>
 
   <body role="document">
@@ -16,6 +18,63 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 
 	<div id="tabledata">
 	<?php
+	$limit = 20;
+	$sql = 'SELECT * FROM transportation_vf';
+	if ($result=mysqli_query($db,$sql)) {
+  		$total=mysqli_num_rows($result);
+	  }
+	  else {
+		die('There was an error running the query ');
+	  }
+// How many pages will there be
+if ($total == 0) {
+	echo ("There are no records to display");
+	exit;
+}
+else {
+	$totalpages = ceil($total / $limit);
+}
+// get the current offset or set a default
+if (isset($_REQUEST['start']) && is_numeric($_REQUEST['start'])) {
+	$pageStart = (int) $_REQUEST['start'];
+ } else {
+	$pageStart = 0;
+ }
+ // current page
+ $page = ceil($pageStart / $limit) +1;
+
+ $prevPage = ($pageStart - $limit < 0) ? 0 : $pageStart - $limit;
+ $nextPage = ($pageStart + $limit > $total) ? $pageStart: $pageStart + $limit;
+
+// Some information to display to the user
+$start = $pageStart + 1;
+$end = min(($pageStart + $limit), $total);
+
+echo "</div><div class='floatleft'>";
+echo '<form name="formp" method="post" action="updatevf.php">';
+echo "<input type='hidden' name='start' value='" . $prevPage . "'>"  ;
+if ($prevPage == 0) {
+    echo "<input type='submit' name='Submit' value='Prev' disabled>";
+}
+else {
+    echo "<input type='submit' name='Submit' value='Prev'>";
+}
+echo '</form></div>';
+echo '<div class="floatleft">';
+echo '<form name="formn" method="post" action="updatevf.php">';
+echo "&nbsp;<input type='hidden' name='start' value='" . $nextPage . "'>"  ;
+if ($page == $totalpages) {
+	echo "<input type='submit' name='Submit' value='Next' disabled>";
+}
+else {
+	echo "<input type='submit' name='Submit' value='Next'>";
+}
+echo '</form></div>';
+echo '<div class="floatleft">';
+// Display the paging information
+echo '&nbsp;&nbsp;', $prevlink, ' Page ', $page, ' of ', $totalpages, ' pages, displaying ', $start, '-', $end, ' of ',
+$total, ' results ', $nextlink;
+echo '<br><br></div>';
 		
 //		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
            if ($isAdmin) {
@@ -23,8 +82,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
            }
            else {
 		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' OR driveruniquename = '$uniquename' OR driveruniquename2 = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
-           }
-		
+		   }
+		$sql .= " LIMIT " . $pageStart . ", " . $limit;
+
 		if(!$result = $db->query($sql))
 		{
 			die('There was an error running the query [' . $db->error . ']');
@@ -159,4 +219,3 @@ if ($isAdmin) {
 
   </body>
 </html>
-
