@@ -45,14 +45,21 @@ if (isset($_REQUEST['start']) && is_numeric($_REQUEST['start'])) {
 
  $prevPage = ($pageStart - $limit < 0) ? 0 : $pageStart - $limit;
  $nextPage = ($pageStart + $limit > $total) ? $pageStart: $pageStart + $limit;
+ $nextRowLast = (floor(($total / $limit)) * $limit);
+
 
 // Some information to display to the user
 $start = $pageStart + 1;
 $end = min(($pageStart + $limit), $total);
 
-echo "</div><div class='floatleft'>";
+echo "<div class='floatleft'>";
 echo '<form name="formp" method="post" action="updatevf.php">';
-echo "<input type='hidden' name='start' value='" . $prevPage . "'>"  ;
+echo "<input type='hidden' name='start' value='0'>"  ;
+    echo "<input type='submit' name='Submit' value='First'>";
+echo '</form></div>';
+echo "<div class='floatleft'>";
+echo '<form name="formp" method="post" action="updatevf.php">';
+echo "&nbsp;<input type='hidden' name='start' value='" . $prevPage . "'>"  ;
 if ($prevPage == 0) {
     echo "<input type='submit' name='Submit' value='Prev' disabled>";
 }
@@ -71,6 +78,10 @@ else {
 }
 echo '</form></div>';
 echo '<div class="floatleft">';
+echo '<form name="formp" method="post" action="updatevf.php">';
+echo "&nbsp;<input type='hidden' name='start' value='" . $nextRowLast . "'>"  ;
+    echo "<input type='submit' name='Submit' value='Last'>";
+echo '</form></div>';
 // Display the paging information
 echo '&nbsp;&nbsp;', $prevlink, ' Page ', $page, ' of ', $totalpages, ' pages, displaying ', $start, '-', $end, ' of ',
 $total, ' results ', $nextlink;
