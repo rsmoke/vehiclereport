@@ -7,3 +7,4 @@ admin/htaccess.admin.txt
 error_log*
 .vscode/
 test.php
+.DS_Store
