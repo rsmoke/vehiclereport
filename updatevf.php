@@ -54,17 +54,21 @@ $end = min(($pageStart + $limit), $total);
 
 echo "<div class='floatleft'>";
 echo '<form name="formp" method="post" action="updatevf.php">';
-echo "<input type='hidden' name='start' value='0'>"  ;
-    echo "<input type='submit' name='Submit' value='First'>";
+echo "<input type='hidden' name='start' value='0'>";
+if ($page == 1) {
+    echo "<input type='submit' name='Submit' value='First' disabled>";
+} else {
+	echo "<input type='submit' name='Submit' value='First' style='cursor:pointer;'>";
+}
 echo '</form></div>';
 echo "<div class='floatleft'>";
 echo '<form name="formp" method="post" action="updatevf.php">';
 echo "&nbsp;<input type='hidden' name='start' value='" . $prevPage . "'>"  ;
-if ($prevPage == 0) {
+if ($prevPage == 0 && $page < 2) {
     echo "<input type='submit' name='Submit' value='Prev' disabled>";
 }
 else {
-    echo "<input type='submit' name='Submit' value='Prev'>";
+    echo "<input type='submit' name='Submit' value='Prev' style='cursor:pointer;'>";
 }
 echo '</form></div>';
 echo '<div class="floatleft">';
@@ -74,13 +78,17 @@ if ($page == $totalpages) {
 	echo "<input type='submit' name='Submit' value='Next' disabled>";
 }
 else {
-	echo "<input type='submit' name='Submit' value='Next'>";
+	echo "<input type='submit' name='Submit' value='Next' style='cursor:pointer;'>";
 }
 echo '</form></div>';
 echo '<div class="floatleft">';
 echo '<form name="formp" method="post" action="updatevf.php">';
 echo "&nbsp;<input type='hidden' name='start' value='" . $nextRowLast . "'>"  ;
-    echo "<input type='submit' name='Submit' value='Last'>";
+if ($page == $totalpages) {
+    echo "<input type='submit' name='Submit' value='Last' disabled>";
+} else {
+	echo "<input type='submit' name='Submit' value='Last' style='cursor:pointer;'>";
+}
 echo '</form></div>';
 // Display the paging information
 echo '&nbsp;&nbsp; Page ', $page, ' of ', $totalpages, ' pages, displaying ', $start, '-', $end, ' of ',
