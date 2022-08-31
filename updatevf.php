@@ -83,8 +83,8 @@ echo "&nbsp;<input type='hidden' name='start' value='" . $nextRowLast . "'>"  ;
     echo "<input type='submit' name='Submit' value='Last'>";
 echo '</form></div>';
 // Display the paging information
-echo '&nbsp;&nbsp;', $prevlink, ' Page ', $page, ' of ', $totalpages, ' pages, displaying ', $start, '-', $end, ' of ',
-$total, ' results ', $nextlink;
+echo '&nbsp;&nbsp; Page ', $page, ' of ', $totalpages, ' pages, displaying ', $start, '-', $end, ' of ',
+$total, ' results ';
 echo '<br><br></div>';
 		
 //		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
@@ -180,7 +180,7 @@ if ($isAdmin) {
 
                                 <td>
                                 <?php
-                                        $mileageDriven = ((isset($value["mileageReturn"]))? $value["mileageReturn"] : $value["mileageDepart"]) - $value["mileageDepart"];
+                                        $mileageDriven = ((isset($value["mileageReturn"]))? floatval($value["mileageReturn"]) : floatval($value["mileageDepart"])) - floatval($value["mileageDepart"]);
                                         echo $mileageDriven;
                                 ?></td>
 
