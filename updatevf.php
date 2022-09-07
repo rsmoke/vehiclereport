@@ -4,6 +4,8 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="css/index.css" type="text/css">
+
     <?php include("_head.php"); ?>
 
   <body role="document">
@@ -16,6 +18,82 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
 
 	<div id="tabledata">
 	<?php
+	$limit = 20;
+	$sql = 'SELECT * FROM transportation_vf';
+	if ($result=mysqli_query($db,$sql)) {
+  		$total=mysqli_num_rows($result);
+	  }
+	  else {
+		die('There was an error running the query ');
+	  }
+// How many pages will there be
+if ($total == 0) {
+	echo ("There are no records to display");
+	exit;
+}
+else {
+	$totalpages = ceil($total / $limit);
+}
+// get the current offset or set a default
+if (isset($_REQUEST['start']) && is_numeric($_REQUEST['start'])) {
+	$pageStart = (int) $_REQUEST['start'];
+ } else {
+	$pageStart = 0;
+ }
+ // current page
+ $page = ceil($pageStart / $limit) +1;
+
+ $prevPage = ($pageStart - $limit < 0) ? 0 : $pageStart - $limit;
+ $nextPage = ($pageStart + $limit > $total) ? $pageStart: $pageStart + $limit;
+ $nextRowLast = (floor(($total / $limit)) * $limit);
+
+
+// Some information to display to the user
+$start = $pageStart + 1;
+$end = min(($pageStart + $limit), $total);
+
+echo "<div class='floatleft'>";
+echo '<form name="formp" method="post" action="updatevf.php">';
+echo "<input type='hidden' name='start' value='0'>";
+if ($page == 1) {
+    echo "<input type='submit' name='Submit' value='First' disabled>";
+} else {
+	echo "<input type='submit' name='Submit' value='First' style='cursor:pointer;'>";
+}
+echo '</form></div>';
+echo "<div class='floatleft'>";
+echo '<form name="formp" method="post" action="updatevf.php">';
+echo "&nbsp;<input type='hidden' name='start' value='" . $prevPage . "'>"  ;
+if ($prevPage == 0 && $page < 2) {
+    echo "<input type='submit' name='Submit' value='Prev' disabled>";
+}
+else {
+    echo "<input type='submit' name='Submit' value='Prev' style='cursor:pointer;'>";
+}
+echo '</form></div>';
+echo '<div class="floatleft">';
+echo '<form name="formn" method="post" action="updatevf.php">';
+echo "&nbsp;<input type='hidden' name='start' value='" . $nextPage . "'>"  ;
+if ($page == $totalpages) {
+	echo "<input type='submit' name='Submit' value='Next' disabled>";
+}
+else {
+	echo "<input type='submit' name='Submit' value='Next' style='cursor:pointer;'>";
+}
+echo '</form></div>';
+echo '<div class="floatleft">';
+echo '<form name="formp" method="post" action="updatevf.php">';
+echo "&nbsp;<input type='hidden' name='start' value='" . $nextRowLast . "'>"  ;
+if ($page == $totalpages) {
+    echo "<input type='submit' name='Submit' value='Last' disabled>";
+} else {
+	echo "<input type='submit' name='Submit' value='Last' style='cursor:pointer;'>";
+}
+echo '</form></div>';
+// Display the paging information
+echo '&nbsp;&nbsp; Page ', $page, ' of ', $totalpages, ' pages, displaying ', $start, '-', $end, ' of ',
+$total, ' results ';
+echo '<br><br></div>';
 		
 //		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
            if ($isAdmin) {
@@ -23,8 +101,9 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
            }
            else {
 		$sql = "SELECT * FROM transportation_vf WHERE uniquename = '$uniquename' OR driveruniquename = '$uniquename' OR driveruniquename2 = '$uniquename' ORDER BY dateEvent DESC, IDvf DESC";	
-           }
-		
+		   }
+		$sql .= " LIMIT " . $pageStart . ", " . $limit;
+
 		if(!$result = $db->query($sql))
 		{
 			die('There was an error running the query [' . $db->error . ']');
@@ -54,6 +133,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/../support/basicLib.php');
                                 <th scope="col">Mileage (Return)</th>
                                 <th scope="col">Fuel (Return)</th>
                                 <th scope="col">Parking</th>
+                                <th scope="col">Notes</th>
                                 <th scope="col">Admin Status</th>
                                 <th scope="col">ID</th>
 
@@ -108,7 +188,7 @@ if ($isAdmin) {
 
                                 <td>
                                 <?php
-                                        $mileageDriven = ((isset($value["mileageReturn"]))? $value["mileageReturn"] : $value["mileageDepart"]) - $value["mileageDepart"];
+                                        $mileageDriven = ((isset($value["mileageReturn"]))? floatval($value["mileageReturn"]) : floatval($value["mileageDepart"])) - floatval($value["mileageDepart"]);
                                         echo $mileageDriven;
                                 ?></td>
 
@@ -121,6 +201,7 @@ if ($isAdmin) {
                                 <td> <?php echo $value["fuelReturn"]; ?> </td>
 
                                 <td> <?php echo $value["parking"]; ?> </td>
+                                <td> <?php echo $value["notes"]; ?> </td>
 <td>
                                 <?php
                                         if (($value["adminnotes"] == "")) { ?>
@@ -157,4 +238,3 @@ if ($isAdmin) {
 
   </body>
 </html>
-

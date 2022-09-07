@@ -34,7 +34,8 @@ $mileageTotal = "";
 <?php	
 		$termToUse = (isset($_POST['term']))? $_POST['term'] : 2260;
 			
-		$sqlTerm = "SELECT * FROM term ORDER BY term ASC LIMIT 10";	
+		//$sqlTerm = "SELECT * FROM term ORDER BY term ASC LIMIT 10";
+		$sqlTerm = "SELECT * FROM term ORDER BY term DESC";
 		
 		if(!$resultTerm = $db->query($sqlTerm))
 		{
