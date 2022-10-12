@@ -781,7 +781,7 @@ function ImageFixOrientation($image, $filename) {
                 $image = imagerotate($image, 180, 0);
                 break;
             case 6:
-                $img = imagerotate($image, -90, 0);
+                $image = imagerotate($image, -90, 0);
                 break;
             case 8:
                 $image = imagerotate($image, 90, 0);
@@ -789,7 +789,7 @@ function ImageFixOrientation($image, $filename) {
             default:
                 return $image;
         }
-        return $img;
+        return $image;
     }
     return $image;
 } //ImageFixOrientation
